@@ -1,0 +1,5 @@
+Fonts used in this design:
+
+Font: Ubuntu
+Author: Dalton Maag
+Url: https://fonts.google.com/specimen/Ubuntu

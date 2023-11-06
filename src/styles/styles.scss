@@ -1,0 +1,22 @@
+.hover-card:hover{
+  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px!important;
+  transition: all 100ms ease-in-out;
+  position: relative;
+  cursor: pointer;
+}
+
+.header-text{
+  position: relative;
+
+  margin: 8px;
+  &:after{
+    content: "";
+    height: 30px;
+    background: #FF6C22;
+    margin-right: 8px;
+    transform: translateX(-8px);
+    position: absolute;
+    left: 0;
+    width: 4px;
+  }
+}

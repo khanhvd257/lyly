@@ -13,7 +13,9 @@
       </div>
       <div class="nav-container">
         <div class="hidden-md-and-down logo">
-          <img src="../../assets/images/logo/LYLY%20STORE.png" width="180" height="60" alt=""/>
+          <RouterLink to="/">
+            <img src="../../assets/images/logo/LYLY%20STORE.png" width="180" height="60" alt=""/>
+          </RouterLink>
         </div>
         <div class="input-search">
           <v-text-field

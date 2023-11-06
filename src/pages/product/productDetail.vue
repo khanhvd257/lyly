@@ -37,6 +37,7 @@
       <Review/>
     </div>
     <div class="product-desc">
+      <h3 class="header-text">Thông tin sản phẩm</h3>
       <div v-html="product.description"></div>
     </div>
   </div>
@@ -56,7 +57,7 @@ export default {
         price: '120.000',
         num: 12,
         rating: 5,
-        description: '<div data-v-a50dd41e="" class="item-intro-img"><div data-v-a50dd41e="" class="item-intro"><p class="irIKAp">THÔNG TIN SẢN PHẨM:</p>\n' +
+        description: '<div data-v-a50dd41e="" class="item-intro-img"><div data-v-a50dd41e="" \n' +
           '<p class="irIKAp">&nbsp;</p>\n' +
           '<p class="irIKAp">Mặt nạ ngủ môi Laneige Lip Sleeping Mask 20g nhẹ nhàng lấy đi tế bào da chết và làm cho đôi môi trở nên mềm mại và đàn hồi hơn trong lúc ngủ.</p>\n' +
           '<p class="irIKAp">• Thành phần &amp; Công dụng:</p>\n' +
@@ -92,8 +93,8 @@ export default {
 <style lang="scss" scoped>
 .product-container {
   display: flex;
-  margin: 2rem 0;
-
+  margin-bottom: 3rem;
+  margin-top: 1rem;
   .product-img {
     display: flex;
     flex-direction: column;

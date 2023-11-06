@@ -5,23 +5,10 @@
                   show-arrows="hover"
                   cycle height="300" interval="4000"
       >
-        <v-carousel-item>
-          <img class="baner-img" slot="sources"
-               src="https://previews.123rf.com/images/santi2014/santi20141708/santi2014170800002/83809998-travel-banner-concept-with-icons-design-on-blue-background.jpg"
-               alt=""
-          >
-        </v-carousel-item>
-        <v-carousel-item>
-          <img class="baner-img" slot="sources"
-               src="https://minio-api.micro-tech.com.vn/bono/51808fe475c04bd7b5edf47d010574c5.png"
-               alt=""
-          >
-        </v-carousel-item>
-        <v-carousel-item>
-          <img class="baner-img" slot="sources"
-               src="https://vietsensetravel.com/view/at_du-lich-thai-lan_f81ab4e88b900fe281233e69757ea478.jpg"
-               alt=""
-          >
+        <v-carousel-item v-for="item in bannerList" :key="item">
+          <img width="890" height="300" class="baner-img" slot="sources"
+               :src="`./src/assets/banner/${item}.png`"
+          />
         </v-carousel-item>
       </v-carousel>
     </div>
@@ -91,6 +78,9 @@ export default {
   data() {
 
     return {
+      bannerList: [
+        'banner1', 'banner2', 'banner3'
+      ],
       modules: [Autoplay, Pagination, Navigation],
       imgList:
         ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWKL5w-51d5c3l5X1aemJTF_b_b1e6OQ5XZzZrNhfIMw0tRcjKsglsQgXTYtV-kOO0WIo&usqp=CAU'],

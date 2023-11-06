@@ -5,7 +5,7 @@
       <div
         v-for="n in 5"
       >
-        <div class="product-content hover-card">
+        <div class="product-content hover-card" @click="linkToProduct">
 
           <div class="product-img">
             <img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
@@ -43,6 +43,13 @@
 <script>
 export default {
   name: "FavoriteProduct",
+  methods:{
+    linkToProduct(){
+      this.$router.push({
+        name: 'productDetail'
+      })
+    }
+  }
 }
 </script>
 

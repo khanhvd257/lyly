@@ -1,8 +1,8 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
-import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
-import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
+// import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
+// import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
 
 const route = useRoute()
 const activeTab = ref(route.params.tab)
@@ -10,20 +10,20 @@ const activeTab = ref(route.params.tab)
 // tabs
 const tabs = [
   {
-    title: 'Account',
+    title: 'Tài khoản',
     icon: 'mdi-account-outline',
     tab: 'account',
   },
-  {
-    title: 'Security',
-    icon: 'mdi-lock-open-outline',
-    tab: 'security',
-  },
-  {
-    title: 'Notifications',
-    icon: 'mdi-bell-outline',
-    tab: 'notification',
-  },
+  // {
+  //   title: 'Security',
+  //   icon: 'mdi-lock-open-outline',
+  //   tab: 'security',
+  // },
+  // {
+  //   title: 'Notifications',
+  //   icon: 'mdi-bell-outline',
+  //   tab: 'notification',
+  // },
 ]
 </script>
 
@@ -46,7 +46,7 @@ const tabs = [
         {{ item.title }}
       </VTab>
     </VTabs>
-    <VDivider />
+    <VDivider/>
 
     <VWindow
       v-model="activeTab"
@@ -54,18 +54,18 @@ const tabs = [
     >
       <!-- Account -->
       <VWindowItem value="account">
-        <AccountSettingsAccount />
+        <AccountSettingsAccount/>
       </VWindowItem>
 
       <!-- Security -->
-      <VWindowItem value="security">
-        <AccountSettingsSecurity />
-      </VWindowItem>
+      <!--      <VWindowItem value="security">-->
+      <!--        <AccountSettingsSecurity />-->
+      <!--      </VWindowItem>-->
 
-      <!-- Notification -->
-      <VWindowItem value="notification">
-        <AccountSettingsNotification />
-      </VWindowItem>
+      <!--      &lt;!&ndash; Notification &ndash;&gt;-->
+      <!--      <VWindowItem value="notification">-->
+      <!--        <AccountSettingsNotification />-->
+      <!--      </VWindowItem>-->
     </VWindow>
   </div>
 </template>

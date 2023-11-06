@@ -40,7 +40,7 @@ export default {
 </script>
 <style lang="scss">
 .container {
-  max-width: 1200px;
+  width: 1200px;
   margin: 10px auto;
 
 }

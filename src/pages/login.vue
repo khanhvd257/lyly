@@ -32,7 +32,7 @@ export default {
   },
   mounted() {
     if (localStorage.getItem('access_token')) {
-      router.push("/dashboard")
+      router.push("/")
     }
   },
   methods: {

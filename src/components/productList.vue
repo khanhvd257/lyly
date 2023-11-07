@@ -1,20 +1,21 @@
 <template>
   <div class="product">
     <h3 class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
-    <VRow class="container" justify="space-between" >
+    <VRow class="container" justify="space-between">
       <div
-        v-for="n in 20"
+        v-for="item in productList" :key="item.id"
       >
-        <div class="product-content hover-card">
+        <div class="product-content hover-card" @click="handleToProduct(item)">
 
           <div class="product-img">
-            <img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                 alt=""
-            >
+            <VImg :src="item.image_url"
+                  cover
+                  :alt="item.id"
+            />
           </div>
           <div class="product-desc">
             <span class="product-name">
-              Đây là tên sản phẩm  Đây là tên sản phẩm
+              {{ item.name }}
             </span>
             <div class="product-rating">
               <div style="display: flex; align-items: stretch">
@@ -26,7 +27,7 @@
               </span>
             </div>
             <span class="product-price">
-              ₫10.000.000
+              {{ formatPrice(item.price) }}
             </span>
           </div>
         </div>
@@ -36,8 +37,34 @@
 </template>
 
 <script>
+import { getAllProduct } from "@/api/product"
+
 export default {
   name: "ProductList",
+  data() {
+    return {
+      productList: [],
+    }
+  },
+  created() {
+    this.getData()
+  },
+  methods: {
+    getData() {
+      getAllProduct().then(res => {
+        this.productList = res.data
+      })
+
+    },
+    handleToProduct(val) {
+      this.$router.push({
+        name: 'productDetail',
+        query: { id: val.id },
+        params: { title: val.name }
+
+      })
+    },
+  },
 }
 </script>
 
@@ -49,6 +76,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
   .container {
     max-width: 1200px;
     margin: 0;
@@ -86,9 +114,15 @@ export default {
         height: 100px;
 
         .product-name {
-          line-height: 20px;
-          height: 40px;
+          position: relative;
+          display: inline-block;
+          word-wrap: break-word;
+          overflow: hidden;
+          max-height: 2.4em; /* (Number of lines you want visible) * (line-height) */
+          line-height: 1.2em;
           color: black;
+          font-size: 13px;
+
         }
 
         .product-rating {

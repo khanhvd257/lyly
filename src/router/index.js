@@ -17,7 +17,18 @@ const router = createRouter({
         {
           path: 'product',
           name: 'productDetail',
+          meta: {
+            title: 'Chi tiết sản phẩm',
+          },
           component: () => import('../pages/product/productDetail.vue'),
+        },
+        {
+          path: 'pay',
+          name: 'pay',
+          meta: {
+            title: 'Chi tiết thanh toán',
+          },
+          component: () => import('../pages/order/preOrder.vue'),
         },
       ],
     },
@@ -57,5 +68,14 @@ const router = createRouter({
     },
   ],
 })
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0) // Cuộn lên đầu trang
+  if (to.meta.title) {
+    document.title = to.meta.title
+  } else {
+    document.title = 'LYLY Store' // Tiêu đề mặc định nếu không có meta title
+  }
+  next()
 
+})
 export default router

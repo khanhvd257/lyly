@@ -30,15 +30,15 @@
           :modules="modules"
 
         >
-          <swiper-slide class="swiper-slide" v-for="item in 16">
+          <swiper-slide class="swiper-slide" v-for="item in cateArr">
             <VCard variant="flat" class="content">
               <VAvatar size="60">
                 <img class="category-img"
-                     src="https://cdnphoto.dantri.com.vn/eDFk4WWZ0w4M-LSsE51GL5DD908=/thumb_w/1155/2021/12/11/nu-sinh-ngoai-thuong-dep-tua-nang-mai-chia-se-ve-nghe-nguoi-mau-anh-1-1639186701886.jpeg"
-                     alt=""
+                     :src="item.image_url"
+                     alt="item.image_url"
                 >
               </VAvatar>
-              <span>Áo nữ</span>
+              <span>{{item.name}}</span>
             </VCard>
           </swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
@@ -61,6 +61,7 @@ import FavoriteProduct from "@/components/Product.vue"
 import ProductList from "@/components/productList.vue"
 import ThreeBanner from "@/components/ThreeBanner.vue"
 import HotProduct from "@/components/HotProduct.vue"
+import { getAllCategory } from "@/api/product"
 
 export default {
   name: "home",
@@ -75,11 +76,15 @@ export default {
   mounted() {
     // window.addEventListener('resize', this.checkWindowWidth)
   },
+  created() {
+    this.getDataCate()
+  },
   data() {
 
     return {
+      cateArr : [],
       bannerList: [
-        'banner1', 'banner2', 'banner3'
+        'banner1', 'banner2', 'banner3',
       ],
       modules: [Autoplay, Pagination, Navigation],
       imgList:
@@ -92,9 +97,12 @@ export default {
 
     }
   }, methods: {
-    // checkWindowWidth() {
-    //   const windowWidth = window.innerWidth
-    // },
+    getDataCate() {
+      getAllCategory().then(res => {
+        this.cateArr = res.data
+        console.log(res)
+      })
+    },
   },
 }
 </script>
@@ -131,7 +139,7 @@ export default {
 
 
   .category-container {
-    max-width: 1200px;
+    width: 1200px;
     display: flex;
     align-items: center;
     border-radius: 8px;
@@ -144,17 +152,19 @@ export default {
     display: flex;
     flex-direction: column;
     margin: 10px 6px;
+    align-items: center;
 
     .category-img {
       height: 100px;
       width: 100px;
+      object-fit: contain;
       border-radius: 6px;
     }
 
     span {
-      margin-left: 8px;
-      color: black;
-      font-size: 14px;
+      margin-top: 8px;
+      font-size: 12px;
+      text-align: center;
     }
   }
 }

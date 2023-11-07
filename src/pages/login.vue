@@ -16,7 +16,7 @@ const isPasswordVisible = ref(false)
 
 </script>
 <script>
-import { login } from "@/api"
+import { getInfoUser, login } from "@/api"
 import router from "@/router"
 
 export default {
@@ -41,7 +41,11 @@ export default {
         if (res.success) {
           localStorage.setItem('access_token', res.data.token)
           this.error = false
-          router.push("/dashboard")
+          getInfoUser().then(res => {
+            this.$store.commit('setUser', res.data)
+            // localStorage.setItem('userInfo', res.data)
+          })
+          router.push("/")
         }
       }).catch(err => {
         this.error = true

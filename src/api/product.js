@@ -1,11 +1,19 @@
 import request, {Method} from "@/api/axios"
 
+export function getAllCategory (params){
+  return request({
+    url: '/category',
+    headers: { 'Content-Type': 'application/json'},
+    method: Method.GET,
+    params: params
+  });
+}
+
 export function getAllProduct (params){
   return request({
     url: '/product',
     headers: { 'Content-Type': 'application/json'},
     method: Method.GET,
-    needToken: true,
     params: params
   });
 }
@@ -15,7 +23,6 @@ export function getDetailProduct (id){
     url: `/product/${id}`,
     headers: { 'Content-Type': 'application/json'},
     method: Method.GET,
-    needToken: true,
   });
 }
 

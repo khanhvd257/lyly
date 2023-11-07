@@ -1,38 +1,81 @@
 <template>
-  <div>
-    <h3 class="header-text">Giỏ hàng</h3>
-    <div class="cart-title">
-      <span style=" width: 15%;">Hình ảnh</span>
-      <span style="width: 40%;">Tên sản phẩm</span>
-      <span style=" width: 30%;">Giá tiền</span>
-      <span style=" width: 15%; text-align: end">Tùy chọn</span>
-    </div>
-    <div class="cart-container">
-      <div v-for="n in 5" class="cart-item hover-card">
-        <div class="item-img">
-          <img :src="cart.image" alt="">
+  <template v-if="status === 0">
+    <div class="cart">
+      <h3 class="header-text">Giỏ hàng</h3>
+      <div class="cart-title">
+      <span>
+        <VCheckbox style="width: 5%"/>
+      </span>
+        <span style=" width: 15%;">Hình ảnh</span>
+        <span style="width: 35%;">Tên sản phẩm</span>
+        <span style=" width: 30%;">Giá tiền</span>
+        <span style=" width: 15%; text-align: end">Tùy chọn</span>
+      </div>
+      <div class="cart-container">
+        <div v-for="cart in cartArr" :key=cart.id>
+          <VDivider/>
+          <div class="cart-item">
+            <v-checkbox
+              v-model="selectedCart"
+              :value="cart.id"
+            />
+            <div class="item-img">
+              <img width="80" height="80" :src="cart.product_detail.image_url" alt="">
+            </div>
+            <div class="item-content">
+              {{ cart.product_detail.name }}
+            </div>
+            <div class="item-price">
+              <span>{{ formatPrice(cart.product_detail.price) }}</span>
+              <VTextField :rules="[rules.required]" min="1" :max="cart.product_detail.quantity" class="item-quantity"
+                          readonly
+                          density="compact" @update:modelValue="handleCheck(cart)"
+                          type="number" v-model="cart.quantity"
+              />
+              <span>{{ formatPrice(cart.total) }}</span>
+            </div>
+            <div class="action">
+              <VBtn>Xóa</VBtn>
+            </div>
+          </div>
         </div>
-        <div class="item-content">
-          {{ cart.name }}
-        </div>
-        <div class="item-price">
-          <span>{{ cart.price }}</span>
-          <VTextField class="item-quantity" density="compact" type="number">{{ cart.num }}</VTextField>
-          <span>{{ cart.flowPrice }}</span>
-        </div>
-        <div class="action">
-          <VBtn>Xóa</VBtn>
+        <div>
+          <VBtn @click="handleClickCheckCart">Thanh toán</VBtn>
         </div>
       </div>
     </div>
-  </div>
+
+  </template>
+  <template v-if="status===1">
+    <div class="order">
+      <PreOrder :order="orderArr"/>
+    </div>
+  </template>
 </template>
 
 <script>
+import { getAllCart } from "@/api/order"
+import PreOrder from "@/pages/order/preOrder.vue"
+
 export default {
   name: "cart",
+  components: { PreOrder },
   data() {
     return {
+      status: 0,
+      rules: {
+        required: value => !!value || 'Bắt buộc',
+        counter: value => value.length > 0 && value || 'Lớn hơn 0',
+        checkNum: (value, pro) => {
+          if (!value || isNaN(value) || value <= 0) {
+            return 'Số lượng mua lớn hơn 0 '
+          }
+          if (value > pro.quantity) {
+            value = this.product.quantity
+          }
+          return true
+        },
+      },
       cart: {
         image: 'https://product.hstatic.net/1000025647/product/kcn_innisfree_tone_up_no_sebum_new-min_804b62f1d33b4e7eb1c42c74dd5a6786_1024x1024.jpg',
         name: 'Kem chống ẩm',
@@ -40,19 +83,61 @@ export default {
         flowPrice: '300.000',
         num: 3,
       },
+      cartArr: [],
+      selectedCart: [],
+      orderArr: [],
+
     }
   },
+  created() {
+    this.getDataCart()
+  },
+  methods: {
+    getDataCart() {
+      getAllCart().then(res => {
+        this.cartArr = res.data
+      })
+    },
+    handleCheck(cart) {
+      if (cart.quantity) {
+      }
+    },
+    handleClickCheckCart() {
+      this.orderArr = this.cartArr.filter(i => this.selectedCart.includes(i.id))
+      this.status = 1
+    },
+  },
+
+
 }
 </script>
 
 <style lang="scss" scoped>
+.cart {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 100%;
+  margin-left: 1rem;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.order {
+  width: 100%;
+  margin-left: 1rem;
+
+}
+
 .cart-title {
   display: flex;
+  align-items: center;
 
-  span:nth-child(odd) {
+  span:nth-child(even) {
     text-align: center;
   }
-  span:last-child{
+
+  span:last-child {
     margin-right: .5rem;
   }
 }
@@ -64,41 +149,41 @@ export default {
   .cart-item {
     //width: 100%;
     padding: 1rem 0;
-    margin: 1rem .5rem;
+    margin: 1rem 0rem;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
 
     .item-content {
       color: black;
       font-size: 14px;
-      width: 40%;
+      width: 30%;
     }
 
     .item-img {
       width: 15%;
-      height: 100px;
+      height: 80px;
+      text-align: center;
 
       img {
-        width: 100%;
-        height: 100%;
+        width: 80px;
         border-radius: 6px;
-        object-fit: contain;
+        object-fit: cover;
       }
     }
 
     .item-price {
       display: flex;
       gap: 16px;
-      width: 15%;
+      width: 30%;
       align-items: center;
       flex: 1;
 
       .item-quantity {
       }
     }
-    .action{
+
+    .action {
       width: 15%;
       float: right;
       text-align: end;

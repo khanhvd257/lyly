@@ -10,6 +10,15 @@ export function login(param) {
   })
 }
 
+export function getInfoUser() {
+  return request({
+    url: '/user/current',
+    headers: { 'Content-Type': 'application/json' },
+    method: Method.GET,
+    needToken: true,
+  })
+}
+
 export function logout() {
   return request({
     url: '/logout',

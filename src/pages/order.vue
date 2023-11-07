@@ -19,40 +19,54 @@
       </v-tab>
     </v-tabs>
     <div class="order-contain">
-      <VCard class="order-item" v-for="n in 6">
+      <VCard class="order-item" v-for="order in orderArr">
         <div class="order-header">
           <div>
             <span>Thời gian đặt hàng: </span>
-            <span>{{ order.created_ad }}</span>
+            <span>{{ formatDateTime(order.order_date) }}</span>
           </div>
           <div>
-            <span>Trạng thái đơn hàng</span>
-            <VChip color="success">
+            <span>Trạng thái đơn hàng: </span>
+            <VChip v-if="order.status == 'Pending'" color="primary">
+              Chờ xác nhận
+            </VChip>
+            <VChip v-if="order.status == 'Confirmed'" color="green">
+              Đã xác nhận
+            </VChip>
+            <VChip v-if="order.status == 'Cancel'" color="error">
+              Đã hủy
+            </VChip>
+            <VChip v-if="order.status == 'Done'" color="success">
               Hoàn thành
             </VChip>
           </div>
         </div>
         <VDivider/>
-        <div class="order-body">
+        <div v-for="(item,index) in order.order_details" :key="index" class="order-body">
           <div class="item-img">
-            <img :src="order.image" alt="">
+            <img :src="item.product.image_url" alt="">
           </div>
           <div class="item-content">
-            <span class="name">{{ order.name }}</span>
+            <span class="name clamp-text">{{ item.product.name }}</span>
             <div class="quantity">
               <span>Đơn giá:
-                <strong>{{ order.unitPrice }}</strong>
+                <strong>{{ formatPrice(item.product.price) }}</strong>
               </span>
-              <span class=""> | Số lượng: {{ order.num }}</span>
-            </div>
-            <div class="flow-price">
-              Thành tiền:
-              <span>{{ order.flowPrice }}</span>
+              <span class=""> | Số lượng: {{ item.quantity }}</span>
+              <div class="flow-price">
+                Thành tiền:
+                <span>{{ formatPrice(item.price) }}</span>
+              </div>
             </div>
           </div>
         </div>
+        <v-divider style="margin: 1rem 0"/>
         <div class="order-footer">
-          <VBtn variant="outlined">Hủy đơn hàng</VBtn>
+          <div class="flow-price">
+            Tổng tiền thanh toán:
+            <span>{{ formatPrice(order.total_price) }}</span>
+          </div>
+          <VBtn style="margin: 6px 2px" v-if="order.status == 'Pending'" variant="outlined">Hủy đơn hàng</VBtn>
         </div>
       </VCard>
     </div>
@@ -60,8 +74,13 @@
 </template>
 
 <script>
+import { getAllOrder } from "@/api/order"
+
 export default {
   name: "order",
+  created() {
+    this.getDataOrder()
+  },
   data() {
     return {
       order: {
@@ -73,7 +92,15 @@ export default {
         status: 'Pending',
         created_ad: '12h30 12 03 2023',
       },
+      orderArr: [],
     }
+  },
+  methods: {
+    getDataOrder() {
+      getAllOrder().then(res => {
+        this.orderArr = res.data
+      })
+    },
   },
 }
 </script>
@@ -91,12 +118,13 @@ export default {
   .order-item {
     padding: .5rem 1.2rem;
     margin: 16px 0;
-    height: 200px;
+    min-height: 200px;
 
     .order-header {
       display: flex;
       justify-content: space-between;
       font-size: 14px;
+      padding: 0.5rem 0;
     }
 
     .order-body {
@@ -133,16 +161,22 @@ export default {
           float: right;
 
           span {
-            color: #CE5A67;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 14px;
           }
         }
       }
     }
 
     .order-footer {
+      .flow-price {
+        font-size: 16px;
+        font-weight: bold;
+        color: #CE5A67;
+
+      }
+
       float: right;
+      text-align: end;
     }
   }
 }

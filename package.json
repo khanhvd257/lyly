@@ -13,6 +13,7 @@
   "dependencies": {
     "@casl/ability": "^6.2.0",
     "@casl/vue": "^2.2.0",
+    "@coders-tm/vue-number-format": "^3.34.0",
     "@floating-ui/dom": "1.2.8",
     "@tinymce/tinymce-vue": "^5.1.1",
     "@vueuse/core": "^10.1.2",
@@ -46,6 +47,7 @@
     "vue3-apexcharts": "^1.4.1",
     "vue3-perfect-scrollbar": "^1.6.0",
     "vuetify": "3.2.1",
+    "vuex": "^4.1.0",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {

@@ -18,6 +18,16 @@ export function getAllProduct (params){
   });
 }
 
+export function getBestSell (params){
+  return request({
+    url: '/best-sell',
+    headers: { 'Content-Type': 'application/json'},
+    method: Method.GET,
+    params: params
+  });
+}
+
+
 export function getDetailProduct (id){
   return request({
     url: `/product/${id}`,

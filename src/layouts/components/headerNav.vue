@@ -1,6 +1,5 @@
 <template>
-  <div style="background-color: white
-">
+  <div class="head-container">
     <div class="index-nav-bar">
       <div>
         <ul class="sub-menu">
@@ -59,6 +58,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.head-container {
+  left: 0;
+  right: 0;
+  position: fixed;
+  z-index: 1000000;
+  background-color: white;
+
+}
+
 .index-nav-bar {
   margin: 0 auto;
   width: 1200px;
@@ -87,8 +95,11 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-  .logo{}
-  .input-search{
+
+  .logo {
+  }
+
+  .input-search {
     flex: 1;
     margin-left: 2rem;
   }

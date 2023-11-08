@@ -1,19 +1,20 @@
-.hover-card:hover{
-  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px!important;
+.hover-card:hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px !important;
   transition: all 100ms ease-in-out;
   position: relative;
   cursor: pointer;
 }
 
-.flex{
+.flex {
   display: flex;
 }
 
-.header-text{
+.header-text {
   position: relative;
 
   margin: 8px;
-  &:after{
+
+  &:after {
     content: "";
     height: 30px;
     background: #FF6C22;
@@ -23,4 +24,50 @@
     left: 0;
     width: 4px;
   }
+}
+
+.sold-out {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5rem;
+  height: 5rem;
+  border-radius: 60px;
+  background-color: rgba(0, 0, 0, .8);
+  font-size: 1rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+}
+
+.sold-out-detail {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  text-align: center;
+  border: 2px solid rgba(250, 8, 8, 0.5);
+  font-size: 1rem;
+  color: red;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+}
+
+.sold-out-detail:before {
+  content: '';
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  text-align: center;
+  border: 2px dashed rgba(250, 8, 8, 0.5);
 }

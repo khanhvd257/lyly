@@ -48,7 +48,7 @@
   </template>
   <template v-if="status===1">
     <div class="order">
-      <PreOrder :order="orderArr"/>
+      <PreOrder :order="orderArr" :selected-ids="selectedCart"/>
     </div>
   </template>
 </template>

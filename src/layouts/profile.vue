@@ -19,7 +19,7 @@ export default {
 <style scoped>
 .container-profile {
 
-  margin: 8px auto;
+  margin: 100px auto;
   width: 1200px;
   display: flex;
 }

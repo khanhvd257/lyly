@@ -29,3 +29,21 @@ export function getAllOrder() {
   })
 }
 
+export function addToCart(data) {
+  return request({
+    url: '/cart',
+    headers: { 'Content-Type': 'application/json' },
+    method: Method.POST,
+    needToken: true,
+    data: data,
+  })
+}
+
+export function cancelOrder(id) {
+  return request({
+    url: `/order/${id}/cancel`,
+    headers: { 'Content-Type': 'application/json' },
+    method: Method.PUT,
+    needToken: true,
+  })
+}

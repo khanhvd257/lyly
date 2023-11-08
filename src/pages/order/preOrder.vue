@@ -1,5 +1,7 @@
 <template>
   <v-card>
+    <h2 style="text-align: center; margin: 1rem 0; color: #CE5A67">THÔNG TIN ĐẶT SẢN PHẨM</h2>
+    <VDivider/>
     <div class="pay-containter">
       <h3 class="header-text">Thông tin sản phẩm</h3>
       <div v-for="(item,index) in order" :key="index">
@@ -9,7 +11,7 @@
                alt=""
           >
           <div class="name">
-            <span style="width: 30%;">Tên sản phẩm: {{ item.product_detail.name }}</span>
+            <span style="width: 30%; font-size: 14px">Tên sản phẩm: {{ item.product_detail.name }}</span>
             <span>Số lượng: {{ item.quantity }}</span>
             <span>Đơn giá: {{ formatPrice(item.product_detail.price) }}</span>
             <span>{{ item.total ? formatPrice(item.total) : formatPrice(item.flowPrice) }}</span>
@@ -22,13 +24,13 @@
         <v-row>
           <v-col sm="6">
             <VTextField label="Tên người nhận" v-model="name"
-                        :rules="[() => !!name || 'Vui lòng điền thông tin']"
+                        :rules="[rules.required]"
 
             />
           </v-col>
           <v-col sm="6">
             <VTextField label="Số điện thoại" v-model="phone"
-                        :rules="[() => !!phone || 'Vui lòng điền thông tin']"
+                        :rules="[rules.required]"
             />
           </v-col>
         </v-row>
@@ -37,7 +39,7 @@
             <VSelect label="Tên tỉnh/ Thành phố" :items="provinceData"
                      item-title="full_name" item-value="code"
                      @update:modelValue="getDataDistrict" v-model="addressForm.province"
-                     :rules="[() => !!addressForm.province || 'Vui lòng chọn']"
+                     :rules="[rules.required]"
 
             />
           </VCol>
@@ -46,7 +48,7 @@
                      item-title="full_name" item-value="code"
                      v-if="addressForm.province"
                      @update:modelValue="getDataWards" v-model="addressForm.district"
-                     :rules="[() => !!addressForm.district || 'Vui lòng chọn']"
+                     :rules="[rules.required]"
             />
           </VCol>
         </VRow>
@@ -56,12 +58,14 @@
                      item-title="full_name" item-value="code"
                      v-model="addressForm.ward"
                      v-if="addressForm.district"
-                     item-props="fullname" :rules="[() => !!addressForm.ward || 'Vui lòng chọn']"
+                     item-props="fullname" :rules="[rules.required]"
             />
           </VCol>
 
           <VCol sm="6">
-            <VTextField label="Tên Đường" v-model="addressForm.stress" v-if="addressForm.ward"/>
+            <VTextField label="Tên Đường" v-model="addressForm.stress"
+                        :rules="[rules.required]" v-if="addressForm.ward"
+            />
           </VCol>
         </VRow>
       </div>
@@ -88,7 +92,7 @@
         <span class="price-total">
           {{ formatPrice(100000) }}
     </span>
-        <VBtn color="success" @click="goPay">Thanh toán</VBtn>
+        <VBtn :disabled="!isValidate" color="success" @click="goPay">Thanh toán</VBtn>
       </div>
     </div>
   </v-card>
@@ -109,6 +113,7 @@ export default {
   },
   data() {
     return {
+      isValidate: false,
       userInfo: {},
       provinceData: [],
       wardsData: [],
@@ -129,7 +134,12 @@ export default {
         province: '',
       },
       rules: {
-        required: value => !!value || 'Bắt buộc',
+        required: value => {
+          if (!value) {
+            return 'Trường này phải điền'
+          }
+          return true
+        },
         counter: value => value.length > 0 || 'Lớn hơn 0',
       },
     }
@@ -137,10 +147,20 @@ export default {
   created() {
     this.getDataProvince()
     getInfoUser().then(res => {
-      console.log(res)
       this.name = res.data.info.name
       this.phone = res.data.info.phone
     })
+    this.formOrder.selectIds = this.selectedIds
+  },
+  computed: {
+    isValidate() {
+      if (this.addressForm.stress && this.addressForm.district &&
+        this.addressForm.ward && this.addressForm.province) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 
   methods: {
@@ -148,50 +168,59 @@ export default {
       getProvince().then(res => {
         this.provinceData = res.data
       })
-    },
+    }
+    ,
     getDataDistrict(id) {
       getDistrict({ province_code: id }).then(res => {
         this.districtData = res.data
         this.addressForm.district = ''
         this.addressForm.ward = ''
       })
-    },
+    }
+    ,
     getDataWards(id) {
       getWards({ district_code: id }).then(res => {
         this.wardsData = res.data
         this.addressForm.ward = ''
       })
-    },
+    }
+    ,
     goPay() {
-      if (this.order.length == 1) {
-        const provice = this.provinceData.find(item => item.code == this.addressForm.province).full_name
-        const district = this.districtData.find(i => i.code == this.addressForm.district).full_name
-        const ward = this.wardsData.find(i => i.code == this.addressForm.ward).full_name
-        this.formOrder.delivery_address = this.addressForm.stress + " - " + ward + " - " + district + " - " + provice
-        this.formOrder.product_id = this.order[0].product_detail.id
-        this.formOrder.quantity = this.order[0].quantity
-        this.formOrder.note = this.name + " " + this.phone
-        console.log(this.formOrder)
-        delete this.formOrder.selectIds
-        orderProduct(this.formOrder).then(res => {
-          this.$router.push({
-            name: 'order',
-          })
-          this.$moshaToast('Đặt hàng thành công',
-            {
-              type: 'success',
-              transition: 'slide',
-            })
+      const provice = this.provinceData.find(item => item.code == this.addressForm.province).full_name
+      const district = this.districtData.find(i => i.code == this.addressForm.district).full_name
+      const ward = this.wardsData.find(i => i.code == this.addressForm.ward).full_name
+      this.formOrder.delivery_address = this.addressForm.stress + " - " + ward + " - " + district + " - " + provice
+      this.formOrder.product_id = this.order[0].product_detail.id
+      this.formOrder.quantity = this.order[0].quantity
+      this.formOrder.note = this.name + " " + this.phone
+      console.log(this.formOrder)
+      let load = this.$loading.show()
+      orderProduct(this.formOrder).then((res) => {
+
+        this.$router.push({
+          name: 'order',
         })
-      } else {
-        this.$moshaToast('Đặt hàng thaats bai',
+        this.$moshaToast('Đặt hàng thành công',
           {
             type: 'success',
             transition: 'slide',
           })
-      }
-    },
-  },
+      }).catch(e => {
+        this.$moshaToast('Đặt hàng thất bai',
+          {
+            type: 'success',
+            transition: 'slide',
+            hideProgressBar: 'true',
+            timeOut: 2000,
+          })
+      })
+
+      load.hide()
+
+    }
+    ,
+  }
+  ,
 
 }
 </script>

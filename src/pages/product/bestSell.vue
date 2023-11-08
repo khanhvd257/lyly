@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <h3 class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
+    <h3 class="header-text">Sản phẩm bán chạy</h3>
     <VRow class="container" justify="space-between">
       <div
         v-for="item in productList" :key="item.id"
@@ -24,7 +24,7 @@
                 <VIcon size="16" icon="emojione:star"/>
               </div>
               <span>
-                45 Lượt bán
+               {{ item.total_sold }} Lượt bán
               </span>
             </div>
             <span class="product-price">
@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import { getAllProduct } from "@/api/product"
+import { getBestSell } from "@/api/product"
 
 export default {
-  name: "ProductList",
+  name: "bestSell",
   data() {
     return {
       productList: [],
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     getData() {
-      getAllProduct().then(res => {
+      getBestSell().then(res => {
         this.productList = res.data
       })
 

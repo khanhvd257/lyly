@@ -25,20 +25,20 @@
         <swiper
           class="category-container swiper"
           grab-cursor
-          :slides-per-view="8"
+          :slides-per-view="9"
           :spaceBetween="30"
           :modules="modules"
 
         >
           <swiper-slide class="swiper-slide" v-for="item in cateArr">
-            <VCard variant="flat" class="content">
+            <VCard variant="flat" class="content hover-card">
               <VAvatar size="60">
                 <img class="category-img"
                      :src="item.image_url"
                      alt="item.image_url"
                 >
               </VAvatar>
-              <span>{{item.name}}</span>
+              <span>{{ item.name }}</span>
             </VCard>
           </swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
@@ -46,7 +46,7 @@
       </div>
     </VCol>
   </VRow>
-  <HotProduct/>
+  <BestSell/>
   <FavoriteProduct/>
   <ThreeBanner/>
   <Review/>
@@ -62,10 +62,12 @@ import ProductList from "@/components/productList.vue"
 import ThreeBanner from "@/components/ThreeBanner.vue"
 import HotProduct from "@/components/HotProduct.vue"
 import { getAllCategory } from "@/api/product"
+import BestSell from "@/pages/product/bestSell.vue"
 
 export default {
   name: "home",
   components: {
+    BestSell,
     HotProduct,
     ThreeBanner,
     ProductList,
@@ -82,7 +84,7 @@ export default {
   data() {
 
     return {
-      cateArr : [],
+      cateArr: [],
       bannerList: [
         'banner1', 'banner2', 'banner3',
       ],

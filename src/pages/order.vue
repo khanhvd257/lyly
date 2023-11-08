@@ -66,7 +66,10 @@
             Tổng tiền thanh toán:
             <span>{{ formatPrice(order.total_price) }}</span>
           </div>
-          <VBtn style="margin: 6px 2px" v-if="order.status == 'Pending'" variant="outlined">Hủy đơn hàng</VBtn>
+          <VBtn style="margin: 6px 2px" @click="handleCancelOrder(order.id)" v-if="order.status == 'Pending'"
+                variant="outlined"
+          >Hủy đơn hàng
+          </VBtn>
         </div>
       </VCard>
     </div>
@@ -74,7 +77,7 @@
 </template>
 
 <script>
-import { getAllOrder } from "@/api/order"
+import { cancelOrder, getAllOrder } from "@/api/order"
 
 export default {
   name: "order",
@@ -99,6 +102,18 @@ export default {
     getDataOrder() {
       getAllOrder().then(res => {
         this.orderArr = res.data
+      })
+    },
+    handleCancelOrder(id) {
+      cancelOrder(id).then(res => {
+        this.getDataOrder()
+        this.$moshaToast('Hủy thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            hideProgressBar: 'true',
+            timeOut: 2000,
+          })
       })
     },
   },

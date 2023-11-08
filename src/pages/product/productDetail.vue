@@ -3,7 +3,11 @@
     <div style="background-color: white; padding: .2rem 1.6rem; border-radius: 12px">
       <div class="product-container">
         <div class="product-img">
-          <img :src="product.image_url" alt=""/>
+          <div class="img-wrap">
+            <div class="zoom-img">
+              <pic-zoom :url="product.image_url" :scale="3" alt=""/>
+            </div>
+          </div>
           <div class="flex mt-1">
             <VIcon icon="mdi-heart"/>
             Thêm vào yêu thích
@@ -14,25 +18,25 @@
           <div class="review">
             <div style="display: flex;align-items: center;">
               <strong>5.0</strong>
-              <VRating model-value="5" length="5" size="small"/>
+              <VRating disabled model-value="5" length="5" size="small"/>
             </div>
             <span>&nbsp; | 5 lượt đặt</span>
           </div>
-
+          <span v-if="product.quantity == 0" class="sold-out-detail">Bán hết</span>
           <div class="product-price">
             Giá: <span>{{ formatPrice(product.price) }}</span>
           </div>
           <div class="pro-num">
             Số lượng:
-            <VTextField
-              density="compact" type="number" v-model="formOrder.quantity"
-              :rules="[rules.required, rules.checkNum]" min="1" :max="product.quantity"
+            <VTextField :disabled="product.quantity == 0"
+                        density="compact" type="number" v-model="formOrder.quantity"
+                        :rules="[rules.required, rules.checkNum]" min="1" :max="product.quantity"
             />
             {{ product.quantity }} sản phẩm có sẵn
           </div>
           <div class="action">
             <VBtn :disabled="error" color="success" @click="payProduct">Đặt ngay</VBtn>
-            <VBtn :disabled="error" color="warning">Thêm giỏ hàng</VBtn>
+            <VBtn :disabled="error" @click="handleAddToCart" color="warning">Thêm giỏ hàng</VBtn>
           </div>
 
         </div>
@@ -53,14 +57,21 @@
 
 <script>
 import Review from "@/components/Review.vue"
+import PicZoom from 'vue-piczoom'
 import { getDetailProduct } from "@/api/product"
 import PreOrder from "@/pages/order/preOrder.vue"
+import { addToCart } from "@/api/order"
 
 export default {
   name: "product_detail",
-  components: { PreOrder, Review },
+  components: { PreOrder, Review, PicZoom },
   created() {
     this.getProduct(this.$route.query.id)
+  },
+  computed: {
+    error() {
+      return this.product.quantity <= 0;
+    },
   },
   data() {
     return {
@@ -85,6 +96,10 @@ export default {
         product_detail: {},
         quantity: 1,
         flowPrice: 0,
+      },
+      formCart: {
+        product_id: '',
+        quantity: 1,
       },
       orderArr: [],
       product: {
@@ -113,6 +128,25 @@ export default {
       this.formOrder.product_detail = this.product
       this.orderArr.push(this.formOrder)
     },
+    handleAddToCart() {
+      this.formCart.product_id = this.product.id
+      this.formCart.quantity = this.formOrder.quantity
+      addToCart(this.formCart).then(res => {
+        this.$moshaToast('Đã thêm giỏ hàng thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            hideProgressBar: 'true',
+          })
+      }).catch(e => {
+        this.$moshaToast('Lỗi xảy ra khi thêm',
+          {
+            type: 'error',
+            transition: 'slide',
+            hideProgressBar: 'true',
+          })
+      })
+    },
   },
 }
 </script>
@@ -126,22 +160,27 @@ export default {
   .product-img {
     display: flex;
     flex-direction: column;
-    width: 350px;
-    height: 350px;
     margin-right: 2rem;
 
-    img {
-      border-radius: 12px;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .img-wrap {
+      width: 350px;
+      height: 350px;
+
+      .zoom-img {
+        border-radius: 12px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
+
   }
 
   .product-content {
     display: flex;
     margin-top: 1rem;
     flex-direction: column;
+    position: relative;
     flex: 1;
     gap: .6rem;
 

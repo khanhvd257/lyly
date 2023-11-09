@@ -37,19 +37,27 @@ export default {
   },
   methods: {
     handleSubmit() {
+      let load = this.$loading.show()
       login(this.loginForm).then(res => {
-        if (res.success) {
           localStorage.setItem('access_token', res.data.token)
-          this.error = false
           getInfoUser().then(res => {
-            this.$store.commit('setUser', res.data)
-            // localStorage.setItem('userInfo', res.data)
+            console.log(res.data.info.name)
+            const objectJSON = JSON.stringify(res.data.info)
+            localStorage.setItem('infoUser', objectJSON)
           })
+          this.error = false
+          this.$moshaToast('Đăng nhập thành công',
+            {
+              type: 'success',
+              transition: 'slide',
+              timeout: 3000,
+            })
           router.push("/")
-        }
-      }).catch(err => {
+        },
+      ).catch(err => {
         this.error = true
       })
+      load.hide()
     },
   },
 }

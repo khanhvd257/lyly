@@ -3,9 +3,9 @@
     <v-list density="compact" class="menu-list">
       <v-list-subheader class="menu-header">
         <VAvatar size="80"
-                 image="https://kiddy.edu.vn/wp-content/uploads/2023/04/150-Hinh-Avatar-Nam-Dep-Trai-Ca-Tinh-Doc-Dao.jpg"
+                 :image="userInfo.avatar? userInfo.avatar : 'https://kiddy.edu.vn/wp-content/uploads/2023/04/150-Hinh-Avatar-Nam-Dep-Trai-Ca-Tinh-Doc-Dao.jpg'"
         />
-        <strong>Văn Đình Khánh</strong>
+        <strong style="margin-left: 1rem">{{ userInfo.name? userInfo.name : 'customer' }}</strong>
       </v-list-subheader>
 
       <v-list-item
@@ -24,23 +24,43 @@
   </div>
 </template>
 <script>
+import { logout } from "@/api"
+import router from "@/router"
+
 export default {
   name: "profileMenu",
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('infoUser'))
+    },
+  },
   data: () => ({
     items: [
-      { text: 'Đơn mua hàng', icon: 'icon-park:transaction-order', link: 'order' },
+      { text: 'Đơn mua hàng', icon: 'icon-park-outline:transaction-order', link: 'order' },
       { text: 'Giỏ hàng', icon: 'noto-v1:shopping-cart', link: 'cart' },
       { text: 'Thông tin tài khoản', icon: 'icon-park:people', link: 'account' },
-      { text: 'Đăng xuất', icon: 'majesticons:logout', link: 'login' },
     ],
   }),
-  methods:{
-    handleClick(link){
+  methods: {
+    handleClick(link) {
       this.$router.push({
-        name: link
+        name: link,
       })
-    }
-  }
+    },
+    handleLogout() {
+      logout().then(res => {
+        this.$moshaToast('Đăng xuất thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            timeout: 3000,
+          })
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('infoUser')
+        router.push('/login')
+      })
+    },
+  },
 }
 </script>
 

@@ -35,8 +35,9 @@
             {{ product.quantity }} sản phẩm có sẵn
           </div>
           <div class="action">
-            <VBtn :disabled="error" color="success" @click="payProduct">Đặt ngay</VBtn>
-            <VBtn :disabled="error" @click="handleAddToCart" color="warning">Thêm giỏ hàng</VBtn>
+            <VBtn :disabled="error" v-if="product.quantity !=0" color="success" @click="payProduct">Đặt ngay</VBtn>
+            <VBtn :disabled="error" v-if="product.quantity !=0" @click="handleAddToCart" color="warning">Thêm giỏ hàng
+            </VBtn>
           </div>
 
         </div>
@@ -70,7 +71,7 @@ export default {
   },
   computed: {
     error() {
-      return this.product.quantity <= 0;
+      return this.product.quantity <= 0
     },
   },
   data() {
@@ -129,23 +130,27 @@ export default {
       this.orderArr.push(this.formOrder)
     },
     handleAddToCart() {
+      let load = this.$loading.show()
       this.formCart.product_id = this.product.id
       this.formCart.quantity = this.formOrder.quantity
-      addToCart(this.formCart).then(res => {
-        this.$moshaToast('Đã thêm giỏ hàng thành công',
+      addToCart(this.formCart).then((res) => {
+        console.log(res)
+        this.$moshaToast('Theem gio thanh cong',
           {
-            type: 'success',
+            type: 'warning',
             transition: 'slide',
             hideProgressBar: 'true',
           })
+
       }).catch(e => {
         this.$moshaToast('Lỗi xảy ra khi thêm',
           {
-            type: 'error',
+            type: 'warning',
             transition: 'slide',
             hideProgressBar: 'true',
           })
       })
+      load.hide()
     },
   },
 }

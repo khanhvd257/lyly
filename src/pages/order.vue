@@ -4,17 +4,18 @@
     <v-tabs
       fixed-tabs
       bg-color="indigo-darken-2"
+      @update:modelValue="handleFilter"
     >
-      <v-tab prepend-icon="material-symbols:pending-actions">
+      <v-tab value="pending" prepend-icon="material-symbols:pending-actions">
         Chờ xác nhận
       </v-tab>
-      <v-tab prepend-icon="fluent-mdl2:waitlist-confirm">
+      <v-tab value="confirmed" prepend-icon="fluent-mdl2:waitlist-confirm">
         Đã xác nhận
       </v-tab>
-      <v-tab prepend-icon="ic:sharp-done-all">
+      <v-tab value="done" prepend-icon="ic:sharp-done-all">
         Hoàn thành
       </v-tab>
-      <v-tab prepend-icon="game-icons:cancel">
+      <v-tab value="cancel" prepend-icon="game-icons:cancel">
         Đã hủy
       </v-tab>
     </v-tabs>
@@ -47,7 +48,9 @@
             <img :src="item.product.image_url" alt="">
           </div>
           <div class="item-content">
-            <span class="name clamp-text">{{ item.product.name }}</span>
+            <router-link :to="`/product?id=${item.product.id}`">
+              <span class="cursor name clamp-text">{{ item.product.name }}</span>
+            </router-link>
             <div class="quantity">
               <span>Đơn giá:
                 <strong>{{ formatPrice(item.product.price) }}</strong>
@@ -86,6 +89,9 @@ export default {
   },
   data() {
     return {
+      searchOrder: {
+        status: '',
+      },
       order: {
         image: 'https://inchi.vn/data/thumbnails/qua-tang/qua-tang-gia-dinh-ban-be/coc-in-ten-va-ngay-thang-0.jpg',
         name: 'Kem HADALABO',
@@ -100,9 +106,13 @@ export default {
   },
   methods: {
     getDataOrder() {
-      getAllOrder().then(res => {
+      getAllOrder(this.searchOrder).then(res => {
         this.orderArr = res.data
       })
+    },
+    handleFilter(status) {
+      this.searchOrder.status = status
+      this.getDataOrder()
     },
     handleCancelOrder(id) {
       cancelOrder(id).then(res => {

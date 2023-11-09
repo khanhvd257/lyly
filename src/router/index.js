@@ -33,7 +33,7 @@ const router = createRouter({
       ],
     },
     {
-      path: '/home',
+      path: '/home', redirect: 'home/order',
       component: () => import('../layouts/profile.vue'),
       children: [
         {

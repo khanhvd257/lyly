@@ -1,50 +1,58 @@
 <template>
   <template v-if="status === 0">
     <div class="cart">
-      <h3 class="header-text">Giỏ hàng</h3>
-      <div class="cart-title">
+      <div v-if="cartArr.length">
+        <h3 class="header-text">Giỏ hàng</h3>
+        <div class="cart-title">
       <span>
-        <VCheckbox style="width: 5%"/>
+        <div style="width: 5%"/>
       </span>
-        <span style=" width: 15%;">Hình ảnh</span>
-        <span style="width: 35%;">Tên sản phẩm</span>
-        <span style=" width: 30%;">Giá tiền</span>
-        <span style=" width: 15%; text-align: end">Tùy chọn</span>
-      </div>
-      <div class="cart-container">
-        <div v-for="cart in cartArr" :key=cart.id>
-          <VDivider/>
-          <div class="cart-item">
-            <v-checkbox
-              v-model="selectedCart"
-              :value="cart.id"
-            />
-            <div class="item-img">
-              <img width="80" height="80" :src="cart.product_detail.image_url" alt="">
-            </div>
-            <div class="item-content">
-              {{ cart.product_detail.name }}
-            </div>
-            <div class="item-price">
-              <span>{{ formatPrice(cart.product_detail.price) }}</span>
-              <VTextField :rules="[rules.required]" min="1" :max="cart.product_detail.quantity" class="item-quantity"
-                          readonly
-                          density="compact" @update:modelValue="handleCheck(cart)"
-                          type="number" v-model="cart.quantity"
+          <span style=" width: 15%;">Hình ảnh</span>
+          <span style="width: 35%;">Tên sản phẩm</span>
+          <span style=" width: 30%;">Giá tiền</span>
+          <span style=" width: 15%; text-align: end">Tùy chọn</span>
+        </div>
+        <div class="cart-container">
+          <div v-for="cart in cartArr" :key=cart.id>
+            <VDivider/>
+            <div class="cart-item">
+              <v-checkbox
+                v-model="selectedCart"
+                :value="cart.id"
               />
-              <span>{{ formatPrice(cart.total) }}</span>
-            </div>
-            <div class="action">
-              <VBtn>Xóa</VBtn>
+              <div class="item-img">
+                <img width="80" height="80" :src="cart.product_detail.image_url" alt="">
+              </div>
+              <div class="item-content">
+                {{ cart.product_detail.name }}
+              </div>
+              <div class="item-price">
+                <span>{{ formatPrice(cart.product_detail.price) }}</span>
+                <VTextField :rules="[rules.required]" min="1" :max="cart.product_detail.quantity" class="item-quantity"
+                            readonly
+                            density="compact" @update:modelValue="handleCheck(cart)"
+                            type="number" v-model="cart.quantity"
+                />
+                <span>{{ formatPrice(cart.total) }}</span>
+              </div>
+              <div class="action">
+                <VBtn>Xóa</VBtn>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <VBtn @click="handleClickCheckCart">Thanh toán</VBtn>
+          <div>
+            <VBtn @click="handleClickCheckCart">Thanh toán</VBtn>
+          </div>
         </div>
       </div>
+      <div v-if="!cartArr.length" class="no-cart">
+        <img src="../assets/gif/empty-animation1.gif" alt="">
+        <h2>Chưa có sản phẩm nào trong giỏ hàng</h2>
+        <router-link to="/">
+          <VBtn append-icon="mdi-cart">Mua ngay</VBtn>
+        </router-link>
+      </div>
     </div>
-
   </template>
   <template v-if="status===1">
     <div class="order">
@@ -189,5 +197,11 @@ export default {
       text-align: end;
     }
   }
+}
+
+.no-cart {
+  text-align: center;
+  width: 100%;
+  height: 100%;
 }
 </style>

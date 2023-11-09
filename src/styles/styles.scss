@@ -1,3 +1,4 @@
+$priamry_color: #FF6C22;
 .hover-card:hover {
   box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px !important;
   transition: all 100ms ease-in-out;
@@ -9,6 +10,10 @@
   display: flex;
 }
 
+.cursor:hover{
+  cursor: pointer;
+  color: $priamry_color!important;
+}
 .header-text {
   position: relative;
 

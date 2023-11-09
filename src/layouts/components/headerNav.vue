@@ -3,10 +3,36 @@
     <div class="index-nav-bar">
       <div>
         <ul class="sub-menu">
-          <li v-for="item in menu">
-            <a :href="item.link">
-              {{ item.title }}
-            </a>
+          <li v-if="!userInfo">
+            <router-link to="/login">
+              Đăng nhập
+            </router-link>
+          </li>
+          <li v-if="!userInfo">
+            <router-link to="/register">
+              Đăng kí
+            </router-link>
+          </li>
+          <li v-if="userInfo">
+            <router-link to="/home/order">
+              Đơn hàng
+            </router-link>
+          </li>
+          <li v-if="userInfo">
+            <router-link to="/home/cart">
+              Giỏ hàng
+            </router-link>
+          </li>
+          <li>
+            <router-link v-if="userInfo" to="/home">
+              <VAvatar size="22" v-if="userInfo.avatar" :image="userInfo.avatar"/>
+              <span style="margin-left: .4rem;">{{ userInfo.name ? userInfo.name : 'customer' }}</span>
+            </router-link>
+          </li>
+          <li v-if="userInfo">
+            <router-link @click="handleLogout" to="#">
+              Thoát
+            </router-link>
           </li>
         </ul>
       </div>
@@ -32,27 +58,33 @@
 </template>
 
 <script>
+import { logout } from "@/api/user"
+
 export default {
   name: "headerNav",
+  computed: {
+    userInfo() {
+      if (localStorage.getItem('infoUser')) return JSON.parse(localStorage.getItem('infoUser'))
+      else if (localStorage.getItem('access_token')) return true
+    },
+  },
   data() {
-    return {
-      menu: [{
-        title: "Đăng nhập", link: "login",
-      },
-        {
-          title: "Đăng kí", link: "register",
-        },
-        {
-          title: "Giỏ hàng", link: "home/cart",
-        },
-        {
-          title: "Đơn đặt", link: "home/order",
-        },
-        {
-          title: "Thoát", link: "logout",
-        },
-      ],
-    }
+    return {}
+  },
+  methods: {
+    handleLogout() {
+      logout().then(res => {
+        this.$moshaToast('Đăng xuất thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            timeout: 3000,
+          })
+        localStorage.removeItem('infoUser')
+        localStorage.removeItem('access_token')
+        this.$router.push('/login')
+      })
+    },
   },
 }
 </script>

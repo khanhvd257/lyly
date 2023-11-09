@@ -1,44 +1,3 @@
-<script setup>
-import avatar1 from '@images/avatars/avatar-1.png'
-import { uploadFile } from "@/api"
-const accountData = {
-  avatarImg: avatar1,
-  firstName: 'Văn Đình Khánh',
-  email: 'khanhve@example.com',
-  username: 'khanhvd',
-  phone: '0388018333',
-  address: 'Sầm Sơn'
-}
-
-const refInputEl = ref()
-const accountDataLocal = ref(structuredClone(accountData))
-
-const resetForm = () => {
-  accountDataLocal.value = structuredClone(accountData)
-}
-
-const changeAvatar = (event) => {
-
-  console.log(event.target.files[0])
-  let file = event.target.files[0]
-  const form = {
-    'image': file,
-  }
-  uploadFile(form).then(res => {
-    console.log(res)
-  }).catch(e => {
-    console.log(e)
-  })
-  // const { files } = file.target
-
-}
-
-// reset avatar image
-const resetAvatar = () => {
-  accountDataLocal.value.avatarImg = accountData.avatarImg
-}
-</script>
-
 <template>
   <VRow>
     <VCol cols="12">
@@ -49,7 +8,7 @@ const resetAvatar = () => {
             rounded="lg"
             size="100"
             class="me-6"
-            :image="accountDataLocal.avatarImg"
+            :image="formUser.avatar? formUser.avatar: avatar1"
           />
 
           <!-- 👉 Upload Photo -->
@@ -57,7 +16,7 @@ const resetAvatar = () => {
             <div class="d-flex flex-wrap gap-2">
               <VBtn
                 color="primary"
-                @click="refInputEl?.click()"
+                @click="$refs.refInputEl.click()"
               >
                 <VIcon
                   icon="mdi-cloud-upload-outline"
@@ -65,30 +24,15 @@ const resetAvatar = () => {
                 />
                 <span class="d-none d-sm-block">Cập nhật ảnh đại diện mới</span>
               </VBtn>
-
               <input
                 ref="refInputEl"
                 type="file"
                 name="file"
+                @input="handleUpload"
                 accept=".jpeg,.png,.jpg,GIF"
                 hidden
-                @input="changeAvatar"
-              >
-
-              <VBtn
-                type="reset"
-                color="error"
-                variant="tonal"
-                @click="resetAvatar"
-              >
-                <span class="d-none d-sm-block">Reset</span>
-                <VIcon
-                  icon="mdi-refresh"
-                  class="d-sm-none"
-                />
-              </VBtn>
+              />
             </div>
-
             <p class="text-body-1 mb-0">
               Chỉ cho phép JPG, GIF or PNG. Tối đa 800K
             </p>
@@ -107,7 +51,7 @@ const resetAvatar = () => {
                 cols="12"
               >
                 <VTextField
-                  v-model="accountDataLocal.firstName"
+                  v-model="formUser.name"
                   label="Họ và tên"
                 />
               </VCol>
@@ -118,7 +62,7 @@ const resetAvatar = () => {
                 cols="12"
               >
                 <VTextField
-                  v-model="accountDataLocal.username"
+                  v-model="formUser.username"
                   label="Tên đăng nhập"
                   disabled
                 />
@@ -130,7 +74,7 @@ const resetAvatar = () => {
                 md="6"
               >
                 <VTextField
-                  v-model="accountDataLocal.email"
+                  v-model="formUser.email"
                   label="E-mail"
                   type="email"
                 />
@@ -140,7 +84,7 @@ const resetAvatar = () => {
                 cols="12"
               >
                 <VTextField
-                  v-model="accountDataLocal.address"
+                  v-model="formUser.address"
                   label="Địa chỉ"
                 />
               </VCol>
@@ -149,7 +93,7 @@ const resetAvatar = () => {
                 cols="12"
               >
                 <VTextField
-                  v-model="accountDataLocal.phone"
+                  v-model="formUser.phone"
                   label="Số điện thoại"
                   type="number"
                 />
@@ -160,44 +104,79 @@ const resetAvatar = () => {
                 cols="12"
                 class="d-flex flex-wrap gap-4"
               >
-                <VBtn>Save changes</VBtn>
-
-                <VBtn
-                  color="secondary"
-                  variant="tonal"
-                  type="reset"
-                  @click.prevent="resetForm"
-                >
-                  Reset
-                </VBtn>
+                <VBtn @click="handleSave">Lưu thông tin</VBtn>
               </VCol>
             </VRow>
           </VForm>
         </VCardText>
       </VCard>
     </VCol>
-
-<!--    <VCol cols="12">-->
-<!--      &lt;!&ndash; 👉 Deactivate Account &ndash;&gt;-->
-<!--      <VCard title="Deactivate Account">-->
-<!--        <VCardText>-->
-<!--          <div>-->
-<!--            <VCheckbox-->
-<!--              v-model="isAccountDeactivated"-->
-<!--              label="I confirm my account deactivation"-->
-<!--            />-->
-<!--          </div>-->
-
-<!--          <VBtn-->
-<!--            :disabled="!isAccountDeactivated"-->
-<!--            color="error"-->
-<!--            class="mt-3"-->
-<!--          >-->
-<!--            Deactivate Account-->
-<!--          </VBtn>-->
-<!--        </VCardText>-->
-<!--      </VCard>-->
-<!--    </VCol>-->
   </VRow>
 
 </template>
+<script>
+
+import { getInfoUser, uploadFile } from "@/api"
+import avatar1 from "@images/avatars/avatar-1.png"
+import { updateUser } from "@/api/user"
+import moshaToast from "mosha-vue-toastify"
+
+export default {
+  data() {
+    return {
+      avatar1,
+      formUser: {
+        avatar: '',
+        name: 'Văn Đình Khánh',
+        email: 'khanhve@example.com',
+        username: 'khanhvd',
+        phone: '0388018333',
+        address: 'Sầm Sơn',
+      },
+      user: {},
+    }
+  },
+  created() {
+    this.getDataUser()
+  },
+  methods: {
+    getDataUser() {
+      getInfoUser().then(res => {
+        this.user = res.data.info
+        this.formUser.name = this.user.name
+        this.formUser.username = this.user.username
+        this.formUser.phone = this.user.phone
+        this.formUser.email = this.user.email
+        this.formUser.address = this.user.address
+        this.formUser.avatar = this.user.avatar
+      })
+    },
+    handleUpload(event) {
+
+      let file = event.target.files[0]
+      const form = {
+        'image': file,
+      }
+      uploadFile(form).then(res => {
+        console.log(res)
+        this.formUser.avatar = res.url
+      }).catch(e => {
+      })
+
+    },
+    handleSave() {
+      let load = this.$loading.show()
+      updateUser(this.formUser).then(res => {
+        this.$moshaToast('Sửa thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            timeout: 3000,
+          })
+      })
+      load.hide()
+    },
+  },
+
+}
+</script>

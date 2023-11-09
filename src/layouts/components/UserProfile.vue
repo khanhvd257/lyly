@@ -120,6 +120,7 @@ export default {
             timeout: 3000,
           })
         localStorage.removeItem('access_token')
+        localStorage.removeItem('infoUser')
         router.push('/login')
       })
     },

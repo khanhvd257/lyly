@@ -20,12 +20,13 @@ export function getAllCart() {
   })
 }
 
-export function getAllOrder() {
+export function getAllOrder(params) {
   return request({
     url: '/order',
     headers: { 'Content-Type': 'application/json' },
     method: Method.GET,
     needToken: true,
+    params: params
   })
 }
 

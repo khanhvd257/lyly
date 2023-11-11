@@ -15,16 +15,15 @@
             <span v-if="item.quantity == 0" class="sold-out">Bán hết</span>
           </div>
           <div class="product-desc">
-            <span class="product-name">
+            <span class="product-name clamp-text">
               {{ item.name }}
             </span>
             <div class="product-rating">
               <div style="display: flex; align-items: stretch">
-                <span>5</span>
-                <VIcon size="16" icon="emojione:star"/>
+                <VRating :model-value="item.avg_rating" size="18" icon="emojione:star"/>
               </div>
               <span>
-                45 Lượt bán
+                 Đã bán {{ item.total_sold }}
               </span>
             </div>
             <span class="product-price">
@@ -38,7 +37,7 @@
 </template>
 
 <script>
-import { getAllProduct } from "@/api/product"
+import { getProducts } from "@/api/product"
 
 export default {
   name: "ProductList",
@@ -52,7 +51,7 @@ export default {
   },
   methods: {
     getData() {
-      getAllProduct().then(res => {
+      getProducts().then(res => {
         this.productList = res.data
       })
 

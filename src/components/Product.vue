@@ -3,12 +3,12 @@
     <h3 class="header-text">Sản phẩm được yêu thích nhất</h3>
     <VRow class="container" justify="space-between">
       <div
-        v-for="n in 5"
+        v-for="item in productList" :key="item.id"
       >
-        <div class="product-content hover-card" @click="linkToProduct">
+        <div class="product-content hover-card" @click="handleToProduct(item)">
 
           <div class="product-img">
-            <img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+            <img :src="item.image_url"
                  alt=""
             >
             <div class="item-img-tag">
@@ -18,20 +18,19 @@
             </div>
           </div>
           <div class="product-desc">
-            <span class="product-name">
-              Đây là tên sản phẩm  Đây là tên sản phẩm
+            <span class="product-name clamp-text">
+              {{ item.name }}
             </span>
             <div class="product-rating">
               <div style="display: flex; align-items: stretch">
-                <span>5</span>
-                <VIcon size="16" icon="emojione:star"/>
+                <VRating :model-value="item.avg_rating" size="18" icon="emojione:star"/>
               </div>
               <span>
-                45 Lượt bán
+                 Đã bán <strong>{{ item.total_sold }}</strong>
               </span>
             </div>
             <span class="product-price">
-              ₫10.000.000
+             {{ formatPrice(item.price) }}
             </span>
           </div>
         </div>
@@ -41,15 +40,34 @@
 </template>
 
 <script>
+import { getProducts } from "@/api/product"
+
 export default {
   name: "FavoriteProduct",
-  methods:{
-    linkToProduct(){
-      this.$router.push({
-        name: 'productDetail'
-      })
+  data() {
+    return {
+      productList: [],
     }
-  }
+  },
+  created() {
+    this.getData()
+  },
+  methods: {
+    getData() {
+      getProducts({ favorite: true }).then(res => {
+        this.productList = res.data
+      })
+
+    },
+    handleToProduct(val) {
+      this.$router.push({
+        name: 'productDetail',
+        query: { id: val.id },
+        params: { title: val.name },
+
+      })
+    },
+  },
 }
 </script>
 
@@ -75,7 +93,7 @@ export default {
     align-items: center;
     border-top-right-radius: 0.125rem;
     border-bottom-right-radius: 0.125rem;
-    background-color:#ed3f14;
+    background-color: #ed3f14;
 
     &:before {
       content: "";
@@ -135,6 +153,7 @@ export default {
         .product-name {
           line-height: 20px;
           height: 40px;
+          font-size: 13px;
           color: black;
         }
 

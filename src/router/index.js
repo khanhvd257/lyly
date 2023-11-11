@@ -34,6 +34,7 @@ const router = createRouter({
     },
     {
       path: '/home', redirect: 'home/order',
+      beforeEnter: requireAuth,
       component: () => import('../layouts/profile.vue'),
       children: [
         {
@@ -73,9 +74,8 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title
   } else {
-    document.title = 'LYLY Store' // Tiêu đề mặc định nếu không có meta title
+    document.title = 'LYLY - Mang đến kỉ niệm' // Tiêu đề mặc định nếu không có meta title
   }
   next()
-
 })
 export default router

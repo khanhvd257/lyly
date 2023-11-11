@@ -6,6 +6,9 @@
       bg-color="indigo-darken-2"
       @update:modelValue="handleFilter"
     >
+      <v-tab value="" prepend-icon="material-symbols:pending-actions">
+        Tất cả đơn hàng
+      </v-tab>
       <v-tab value="pending" prepend-icon="material-symbols:pending-actions">
         Chờ xác nhận
       </v-tab>
@@ -24,7 +27,7 @@
         <div class="order-header">
           <div>
             <span>Thời gian đặt hàng: </span>
-            <span>{{ formatDateTime(order.order_date) }}</span>
+            <span>{{ formatDate(order.order_date) }}</span>
           </div>
           <div>
             <span>Trạng thái đơn hàng: </span>
@@ -59,7 +62,12 @@
               <div class="flow-price">
                 Thành tiền:
                 <span>{{ formatPrice(item.price) }}</span>
+                <VBtn class="ml-1" density="compact" variant="outlined" @click="handleRating(item)"
+                      v-if="order.status == 'Done'"
+                >Đánh giá
+                </VBtn>
               </div>
+
             </div>
           </div>
         </div>
@@ -76,22 +84,74 @@
         </div>
       </VCard>
     </div>
+    <v-dialog
+      transition="dialog-top-transition"
+      width="500"
+      v-model="dialog"
+      persistent
+    >
+      <template v-slot:default="{ isActive }">
+        <v-card>
+          <v-toolbar
+            color="primary"
+            title="Đánh giá sản phẩm"
+          ></v-toolbar>
+          <v-card-text>
+            <div class="review-container">
+              <div class="content">
+                <img class="review-img" :src="selectedRating.product.image_url" alt="">
+                <div style="display: flex; flex-direction: column; font-size: 14px">
+                  <span class="review-name">{{ selectedRating.product.name }}</span>
+                  <span class="quantity">Số lượng: {{ selectedRating.quantity }}</span>
+                  <span class="quantity">Giá: {{ formatPrice(selectedRating.price) }}</span>
+                </div>
+              </div>
+              <VTextarea counter="255" placeholder="Nội dung đánh giá" v-model="formRating.comment"/>
+              <h5>Đánh giá sản phẩm</h5>
+              <VRating v-model="formRating.rating"/>
+            </div>
+          </v-card-text>
+          <v-card-actions class="justify-end layout-footer-sticky">
+            <v-btn
+              variant="text"
+              @click="handleSubmit"
+            >Đánh giá
+            </v-btn>
+            <v-btn
+              variant="text"
+              @click="isActive.value = false"
+            >Hủy
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { cancelOrder, getAllOrder } from "@/api/order"
+import { createReview } from "@/api/rating"
 
 export default {
   name: "order",
+  components: {},
   created() {
     this.getDataOrder()
   },
   data() {
     return {
+      dialog: false,
       searchOrder: {
         status: '',
       },
+      formRating: {
+        product_id: '',
+        rating: 5,
+        comment: '',
+        image_url: '',
+      },
+      selectedRating: {},
       order: {
         image: 'https://inchi.vn/data/thumbnails/qua-tang/qua-tang-gia-dinh-ban-be/coc-in-ten-va-ngay-thang-0.jpg',
         name: 'Kem HADALABO',
@@ -109,6 +169,28 @@ export default {
       getAllOrder(this.searchOrder).then(res => {
         this.orderArr = res.data
       })
+    },
+    handleSubmit() {
+      createReview(this.formRating).then(res => {
+        this.$moshaToast('Đánh giá thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            hideProgressBar: 'true',
+          })
+        this.dialog = false
+      })
+    },
+
+    handleRating(val) {
+      this.formRating = {
+        product_id: val.product.id,
+        rating: 5,
+        comment: '',
+        image_url: '',
+      }
+      this.dialog = true
+      this.selectedRating = val
     },
     handleFilter(status) {
       this.searchOrder.status = status
@@ -202,6 +284,23 @@ export default {
 
       float: right;
       text-align: end;
+    }
+  }
+}
+
+.review-container {
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    display: flex;
+
+    .review-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
     }
   }
 }

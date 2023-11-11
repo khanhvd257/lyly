@@ -84,19 +84,25 @@
              class="footer-payment-icon"
         />
       </ul>
+
+
       <div class="pay-footer">
         <div class="info">
           <span>Tên người nhận: {{ name }}</span>
           <span>Số điện thoại: {{ phone }}</span>
         </div>
         <span class="price-total">
-          {{ formatPrice(100000) }}
+          {{ formatPrice(totalPrice) }}
     </span>
-        <VBtn :disabled="!isValidate" color="success" @click="goPay">Thanh toán</VBtn>
+        <VBtn :disabled="!isValidate" color="success" @click="handleShowQR">Thanh toán</VBtn>
       </div>
     </div>
   </v-card>
-
+  <VDialog transition="" v-model="show">
+    <div style="text-align: center">
+      <QRcode :is-show="show"/>
+    </div>
+  </VDialog>
 
 </template>
 
@@ -104,15 +110,19 @@
 import { getDistrict, getProvince, getWards } from "@/api/address"
 import { orderProduct } from "@/api/order"
 import { getInfoUser } from "@/api"
+import QRcode from "@/components/QRcode.vue"
 
 export default {
   name: "preOrder",
+  components: { QRcode },
+
   props: {
     order: [],
     selectedIds: [],
   },
   data() {
     return {
+      show: false,
       isValidate: false,
       userInfo: {},
       provinceData: [],
@@ -161,6 +171,12 @@ export default {
         return false
       }
     },
+    totalPrice() {
+      if (this.selectedIds) {
+        return this.order.reduce((acc, obj) => acc + obj.total, 0)
+      }
+      return this.order[0].flowPrice
+    },
   },
 
   methods: {
@@ -183,8 +199,10 @@ export default {
         this.wardsData = res.data
         this.addressForm.ward = ''
       })
-    }
-    ,
+    },
+    handleShowQR() {
+      this.show = true
+    },
     goPay() {
       const provice = this.provinceData.find(item => item.code == this.addressForm.province).full_name
       const district = this.districtData.find(i => i.code == this.addressForm.district).full_name

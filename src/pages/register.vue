@@ -1,18 +1,10 @@
 <script setup>
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import { useTheme } from 'vuetify'
-import logo from '@images/logo.svg?raw'
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
-import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
-import authV1Tree from '@images/pages/auth-v1-tree.png'
+import authV1Tree2 from '@images/flower.png'
+import authV1Tree from '@images/may_bay.png'
 
-const form = ref({
-  username: '',
-  email: '',
-  password: '',
-  privacyPolicies: false,
-})
 
 const vuetifyTheme = useTheme()
 
@@ -21,6 +13,45 @@ const authThemeMask = computed(() => {
 })
 
 const isPasswordVisible = ref(false)
+
+</script>
+<script>
+import { getInfoUser, login } from "@/api"
+import router from "@/router"
+import { register } from "@/api/user"
+
+export default {
+  data() {
+    return {
+      registerForm: {
+        username: '',
+        password: '',
+        password_confirmation: '',
+      },
+      error: false,
+    }
+  },
+  mounted() {
+
+  },
+  methods: {
+    handleSubmit() {
+      let load = this.$loading.show()
+      register(this.registerForm).then(res => {
+        this.error = false
+        this.$moshaToast('Đăng ký tài khoản thành công',
+          {
+            type: 'success',
+            transition: 'slide',
+            timeout: 3000,
+          })
+      }).catch(err => {
+        this.error = true
+      })
+      load.hide()
+    },
+  },
+}
 </script>
 
 <template>
@@ -32,109 +63,105 @@ const isPasswordVisible = ref(false)
       <VCardItem class="justify-center">
         <template #prepend>
           <div class="d-flex">
-            <div v-html="logo" />
+            <img height="100" width="100" src="../assets/images/logo/logo_tron.png" alt=""/>
           </div>
         </template>
-
         <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-          Materio
+          LYLY Store
         </VCardTitle>
       </VCardItem>
 
-      <VCardText class="pt-2">
-        <h5 class="text-h5 font-weight-semibold mb-1">
-          Adventure starts here 🚀
-        </h5>
-        <p class="mb-0">
-          Make your app management easy and fun!
-        </p>
-      </VCardText>
+      <!--      <VCardText class="pt-2">-->
+      <!--        <h5 class="text-h5 font-weight-semibold mb-1">-->
+      <!--          Chào mừng bạn đến với trang quản trị của LYLY Store! 👋🏻-->
+      <!--        </h5>-->
+      <!--        <p class="mb-0">-->
+      <!--          Vui lòng đăng nhập trước khi bắt đầu-->
+      <!--        </p>-->
+      <!--      </VCardText>-->
 
       <VCardText>
-        <VForm @submit.prevent="() => {}">
+        <VForm>
           <VRow>
-            <!-- Username -->
-            <VCol cols="12">
-              <VTextField
-                v-model="form.username"
-                label="Username"
-              />
-            </VCol>
             <!-- email -->
             <VCol cols="12">
               <VTextField
-                v-model="form.email"
-                label="Email"
-                type="email"
+                v-model="registerForm.username"
+                label="Tên đăng nhập"
+                type="text"
               />
             </VCol>
-
-            <!-- password -->
             <VCol cols="12">
               <VTextField
-                v-model="form.password"
-                label="Password"
+                v-model="registerForm.password"
+                label="Mật khẩu"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
-              <div class="d-flex align-center mt-1 mb-4">
-                <VCheckbox
-                  id="privacy-policy"
-                  v-model="form.privacyPolicies"
-                  inline
-                />
-                <VLabel
-                  for="privacy-policy"
-                  style="opacity: 1;"
+            </VCol>
+            <!-- password -->
+            <VCol cols="12">
+              <VTextField
+                v-model="registerForm.password_confirmation"
+                label="Nhập lại mật khẩu"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                @click:append-inner="isPasswordVisible = !isPasswordVisible"
+              />
+
+              <VAlert style="margin-top: 6px" color="error" v-if="error" text="Sai tài khoản / mật khẩu"/>
+              <!-- remember me checkbox -->
+              <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
+
+
+                <a
+                  class="ms-2 mb-1"
+                  href="/login"
                 >
-                  <span class="me-1">I agree to</span>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-primary"
-                  >privacy policy & terms</a>
-                </VLabel>
+                  Có tài khoản, đăng nhập
+                </a>
               </div>
 
+              <!-- login button -->
               <VBtn
                 block
-                type="submit"
-                to="/"
+                @click="handleSubmit"
               >
-                Sign up
+                Đăng kí ngay
               </VBtn>
             </VCol>
 
-            <!-- login instead -->
-            <VCol
-              cols="12"
-              class="text-center text-base"
-            >
-              <span>Already have an account?</span>
-              <RouterLink
-                class="text-primary ms-2"
-                to="login"
-              >
-                Sign in instead
-              </RouterLink>
-            </VCol>
+            <!-- create account -->
+            <!--            <VCol-->
+            <!--              cols="12"-->
+            <!--              class="text-center text-base"-->
+            <!--            >-->
+            <!--              <span>New on our platform?</span>-->
+            <!--              <RouterLink-->
+            <!--                class="text-primary ms-2"-->
+            <!--                to="/register"-->
+            <!--              >-->
+            <!--                Create an account-->
+            <!--              </RouterLink>-->
+            <!--            </VCol>-->
 
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
+            <!--            <VCol-->
+            <!--              cols="12"-->
+            <!--              class="d-flex align-center"-->
+            <!--            >-->
+            <!--              <VDivider />-->
+            <!--              <span class="mx-4">or</span>-->
+            <!--              <VDivider />-->
+            <!--            </VCol>-->
 
             <!-- auth providers -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <AuthProvider />
-            </VCol>
+            <!--            <VCol-->
+            <!--              cols="12"-->
+            <!--              class="text-center"-->
+            <!--            >-->
+            <!--              <AuthProvider />-->
+            <!--            </VCol>-->
           </VRow>
         </VForm>
       </VCardText>
@@ -150,16 +177,18 @@ const isPasswordVisible = ref(false)
       :src="authV1Tree2"
       class="auth-footer-end-tree d-none d-md-block"
       :width="350"
+
     />
 
     <!-- bg img -->
     <VImg
       class="auth-footer-mask d-none d-md-block"
       :src="authThemeMask"
+      width="400"
     />
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "@core/scss/pages/page-auth.scss";
 </style>

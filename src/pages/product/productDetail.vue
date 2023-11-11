@@ -17,10 +17,10 @@
           <span class="name">{{ product.name }}</span>
           <div class="review">
             <div style="display: flex;align-items: center;">
-              <strong>5.0</strong>
-              <VRating disabled model-value="5" length="5" size="small"/>
+              <strong>{{ parseFloat(product.avg_rating) }}</strong>
+              <VRating disabled half-increments :model-value="product.avg_rating" size="small"/>
             </div>
-            <span>&nbsp; | 5 lượt đặt</span>
+            <span>&nbsp; | {{ product.total_sold }} sản phẩm đã bán</span>
           </div>
           <span v-if="product.quantity == 0" class="sold-out-detail">Bán hết</span>
           <div class="product-price">
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="mt-2">
-        <Review/>
+        <Review :review-arr="reviewList"/>
       </div>
       <div class="product-desc">
         <h3 class="header-text">Thông tin sản phẩm</h3>
@@ -62,12 +62,14 @@ import PicZoom from 'vue-piczoom'
 import { getDetailProduct } from "@/api/product"
 import PreOrder from "@/pages/order/preOrder.vue"
 import { addToCart } from "@/api/order"
+import { getReviewProduct } from "@/api/rating"
 
 export default {
   name: "product_detail",
   components: { PreOrder, Review, PicZoom },
   created() {
     this.getProduct(this.$route.query.id)
+    this.getDataReview()
   },
   computed: {
     error() {
@@ -93,6 +95,7 @@ export default {
           return true
         },
       },
+      reviewList: [],
       formOrder: {
         product_detail: {},
         quantity: 1,
@@ -118,6 +121,12 @@ export default {
     }
   },
   methods: {
+    getDataReview() {
+      getReviewProduct({ product_id: this.$route.query.id }).then(res => {
+        this.reviewList = res.data
+        console.log(this.reviewList)
+      })
+    },
     getProduct(id) {
       getDetailProduct(id).then(res => {
         this.product = res.data

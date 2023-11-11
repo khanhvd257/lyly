@@ -49,10 +49,23 @@
   <BestSell/>
   <FavoriteProduct/>
   <ThreeBanner/>
-  <Review/>
+
+<!--  <Review/>-->
   <ProductList/>
 </template>
+<script setup>
+import { getInfoUser } from "@/api"
+import QRcode from "@/components/QRcode.vue"
 
+const token = localStorage.getItem('access_token')
+if (token) {
+  getInfoUser().then(res => {
+    console.log(res.data.info.name)
+    const objectJSON = JSON.stringify(res.data.info)
+    localStorage.setItem('infoUser', objectJSON)
+  })
+}
+</script>
 <script>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination, Navigation } from 'swiper/modules'

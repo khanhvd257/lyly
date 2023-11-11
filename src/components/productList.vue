@@ -1,6 +1,7 @@
 <template>
   <div class="product">
-    <h3 class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
+    <h3 v-if="title" class="header-text">{{title}}</h3>
+    <h3 v-else class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
     <VRow class="container" justify="space-between">
       <div
         v-for="item in productList" :key="item.id"
@@ -41,6 +42,10 @@ import { getProducts } from "@/api/product"
 
 export default {
   name: "ProductList",
+  props: {
+    title: '',
+
+  },
   data() {
     return {
       productList: [],
@@ -72,18 +77,18 @@ export default {
 
 
 .product {
-  margin: 16px 0px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   .container {
     max-width: 1200px;
+    width: 100%;
     margin: 0;
 
     .product-content {
       margin-top: 2rem;
-      height: 290px;
+      height: 280px;
       width: 220px;
       border-radius: 10px;
       background-color: #fff;

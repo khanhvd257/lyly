@@ -73,6 +73,14 @@ $card-spacer-content: 16px;
   text-overflow: ellipsis;
 }
 
+.clamp-text-1 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+}
+
 .leading-normal {
   line-height: normal !important;
 }

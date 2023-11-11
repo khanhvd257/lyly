@@ -167,6 +167,8 @@ export default {
     display: flex;
     flex-direction: column;
     margin: 10px 6px;
+    height: 100%;
+    max-height: 80px;
     align-items: center;
 
     .category-img {

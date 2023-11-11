@@ -41,7 +41,7 @@ export default {
 <style lang="scss">
 .container {
   width: 1200px;
-  margin: 90px auto;
+  margin: 100px auto;
 
 }
 

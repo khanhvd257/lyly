@@ -116,11 +116,12 @@ export default {
 
   .container {
     max-width: 1200px;
+    width: 100%;
     margin: 0;
     flex-wrap: nowrap;
 
     .product-content {
-      height: 290px;
+      height: 280px;
       width: 220px;
       border-radius: 10px;
       background-color: #fff;

@@ -80,10 +80,11 @@ export default {
   .container {
     max-width: 1200px;
     margin: 0;
+    width: 100%;
 
     .product-content {
       margin-top: 2rem;
-      height: 290px;
+      height: 280px;
       width: 220px;
       border-radius: 10px;
       background-color: #fff;

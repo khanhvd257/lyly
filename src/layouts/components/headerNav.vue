@@ -1,40 +1,56 @@
 <template>
   <div class="head-container">
     <div class="index-nav-bar">
-      <div>
-        <ul class="sub-menu">
-          <li v-if="!userInfo">
-            <router-link to="/login">
-              Đăng nhập
-            </router-link>
-          </li>
-          <li v-if="!userInfo">
-            <router-link to="/register">
-              Đăng kí
-            </router-link>
-          </li>
-          <li v-if="userInfo">
-            <router-link to="/home/order">
-              Đơn hàng
-            </router-link>
-          </li>
-          <li v-if="userInfo">
-            <router-link to="/home/cart">
-              Giỏ hàng
-            </router-link>
-          </li>
-          <li>
-            <router-link v-if="userInfo" to="/home">
-              <VAvatar size="22" v-if="userInfo.avatar" :image="userInfo.avatar"/>
-              <span style="margin-left: .4rem;">{{ userInfo.name ? userInfo.name : 'customer' }}</span>
-            </router-link>
-          </li>
-          <li v-if="userInfo">
-            <router-link @click="handleLogout" to="#">
-              Thoát
-            </router-link>
-          </li>
-        </ul>
+      <div class="top-header">
+        <div>
+          <ul class="sub-menu">
+            <li>
+              <router-link to="/facebook">
+                <VIcon icon="bi:instagram"/> Instagram
+              </router-link>
+            </li>
+            <li >
+              <router-link to="/instagram">
+                <VIcon icon="basil:facebook-messenger-outline"/> Messenger
+              </router-link>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <ul class="sub-menu">
+            <li v-if="!userInfo">
+              <router-link to="/login">
+                Đăng nhập
+              </router-link>
+            </li>
+            <li v-if="!userInfo">
+              <router-link to="/register">
+                Đăng kí
+              </router-link>
+            </li>
+            <li v-if="userInfo">
+              <router-link to="/home/order">
+                Đơn hàng
+              </router-link>
+            </li>
+            <li v-if="userInfo">
+              <router-link to="/home/cart">
+                Giỏ hàng
+              </router-link>
+            </li>
+            <li>
+              <router-link v-if="userInfo" to="/home">
+                <VAvatar size="22" v-if="userInfo.avatar" :image="userInfo.avatar"/>
+                <span style="margin-left: .4rem;">{{ userInfo.name ? userInfo.name : 'customer' }}</span>
+              </router-link>
+            </li>
+            <li v-if="userInfo">
+              <router-link @click="handleLogout" to="#">
+                Thoát
+              </router-link>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="nav-container">
         <div class="hidden-md-and-down logo">
@@ -43,13 +59,7 @@
           </RouterLink>
         </div>
         <div class="input-search">
-          <v-text-field
-            bg-color="#f5f5f5"
-            density="compact"
-            label="Tìm kiếm sản phẩm"
-            append-inner-icon="mdi-search"
-            variant="solo"
-          ></v-text-field>
+          <search-form/>
         </div>
       </div>
     </div>
@@ -59,9 +69,11 @@
 
 <script>
 import { logout } from "@/api/user"
+import SearchForm from "@/components/SearchForm.vue"
 
 export default {
   name: "headerNav",
+  components: { SearchForm },
   computed: {
     userInfo() {
       if (localStorage.getItem('infoUser')) return JSON.parse(localStorage.getItem('infoUser'))
@@ -99,6 +111,10 @@ export default {
 
 }
 
+.top-header{
+  display: flex;
+  justify-content: space-between;
+}
 .index-nav-bar {
   margin: 0 auto;
   width: 1200px;

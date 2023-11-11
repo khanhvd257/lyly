@@ -4,8 +4,8 @@ const theme = {
     light: {
       dark: false,
       colors: {
-        'primary': '#00A9FF',
-        'secondary': '#CDF5FD',
+        'primary': '#FA7070',
+        'secondary': '#FBE9E7',
         'on-secondary': '#fff',
         'success': '#56CA00',
         'info': '#16B1FF',

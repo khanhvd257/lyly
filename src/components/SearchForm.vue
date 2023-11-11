@@ -34,6 +34,7 @@ export default {
   components:{
     Swiper, SwiperSlide,
   },
+
   data() {
     return {
       hotSearch: ['CLOTHING','AO CA SA ',' CONG CHUA BONG BONG'],
@@ -50,7 +51,7 @@ $accent_color: #FF6C22;
 
 #search-box {
   height: 46px;
-  width: 70%;
+  width: 90%;
   border-radius: 30px;
   background: #f0f0f0;
   border: 1px solid #f0f0f0;
@@ -58,6 +59,7 @@ $accent_color: #FF6C22;
   display: flex;
   align-items: center;
   padding: 0 4px 0 20px;
+  margin:  0 auto;
 
   &:hover, &:has(#search-box-input:focus) {
     background: #fff;

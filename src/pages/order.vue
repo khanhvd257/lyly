@@ -2,11 +2,12 @@
   <div>
     <h3 class="header-text">Danh sách đơn hàng</h3>
     <v-tabs
+      class="sticky-top"
       fixed-tabs
       bg-color="indigo-darken-2"
       @update:modelValue="handleFilter"
     >
-      <v-tab value="" prepend-icon="material-symbols:pending-actions">
+      <v-tab value="" prepend-icon="ri:order-play-fill">
         Tất cả đơn hàng
       </v-tab>
       <v-tab value="pending" prepend-icon="material-symbols:pending-actions">
@@ -29,7 +30,7 @@
             <span>Thời gian đặt hàng: </span>
             <span>{{ formatDate(order.order_date) }}</span>
           </div>
-          <div>
+          <div class="order-status">
             <span>Trạng thái đơn hàng: </span>
             <VChip v-if="order.status == 'Pending'" color="primary">
               Chờ xác nhận
@@ -213,6 +214,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+@media (max-width: 600px) {
+  .sticky-top{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 60px;
+    z-index: 1000;
+    background-color: white;
+  }
+  .order-header {
+    font-size: 12px !important;
+
+    .order-status {
+      text-align: end !important;
+    }
+  }
+  .item-content {
+    .name {
+      font-size: 14px !important;
+
+    }
+
+    .quantity {
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+    }
+  }
+}
+
 .order-contain {
   flex: 1;
   display: flex;

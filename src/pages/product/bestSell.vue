@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <h3 class="header-text">Sản phẩm bán chạy</h3>
-    <VRow class="container" justify="space-between">
+    <VRow class="container" justify="space-around" justify-sm="space-between">
       <div
         v-for="item in productList" :key="item.id"
       >
@@ -69,7 +69,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 600px) {
+  .product-content {
+    height: 250px !important;
+    width: 182px !important;;
+    border-radius: 6px !important;;
+    background-color: #fff;
 
+    .product-img {
+      padding: 6px 8px;
+      width: 100%;
+      height: 150px !important;;
+      border-radius: 6px !important;;
+      position: relative;
+
+      img {
+        overflow: hidden;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 8px;
+        height: 100%;
+      }
+    }
+  }
+}
 
 .product {
   margin: 16px 0px;
@@ -81,9 +104,10 @@ export default {
     max-width: 1200px;
     margin: 0;
     width: 100%;
+    row-gap: 1rem;
 
     .product-content {
-      margin-top: 2rem;
+      margin-top: 1rem;
       height: 280px;
       width: 220px;
       border-radius: 10px;

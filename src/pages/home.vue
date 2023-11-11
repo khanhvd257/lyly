@@ -12,7 +12,7 @@
         </v-carousel-item>
       </v-carousel>
     </div>
-    <div class="banner-left">
+    <div class="banner-left hidden-xs">
       <img
         src="https://st3.depositphotos.com/1306638/12575/v/450/depositphotos_125753420-stock-illustration-retro-bus-travel-banner.jpg"
       >
@@ -25,7 +25,7 @@
         <swiper
           class="category-container swiper"
           grab-cursor
-          :slides-per-view="9"
+          :slides-per-view="numberCate"
           :spaceBetween="30"
           :modules="modules"
 
@@ -50,7 +50,7 @@
   <FavoriteProduct/>
   <ThreeBanner/>
 
-<!--  <Review/>-->
+  <!--  <Review/>-->
   <ProductList/>
 </template>
 <script setup>
@@ -89,14 +89,15 @@ export default {
     Swiper, SwiperSlide,
   },
   mounted() {
-    // window.addEventListener('resize', this.checkWindowWidth)
   },
   created() {
+    window.addEventListener('resize', this.checkWindowWidth)
     this.getDataCate()
   },
   data() {
 
     return {
+      numberCate: 9,
       cateArr: [],
       bannerList: [
         'banner1', 'banner2', 'banner3',
@@ -117,6 +118,14 @@ export default {
         this.cateArr = res.data
         console.log(res)
       })
+    },
+    checkWindowWidth() {
+      let windowWidth = window.innerWidth
+      if (windowWidth <= 600) {
+        this.numberCate = 3
+      } else {
+        this.numberCate = 9
+      }
     },
   },
 }
@@ -154,7 +163,8 @@ export default {
 
 
   .category-container {
-    width: 1200px;
+    max-width: 1200px;
+    width: 100%;
     display: flex;
     align-items: center;
     border-radius: 8px;

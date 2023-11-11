@@ -73,7 +73,8 @@
         </div>
         <div class="clearfix"></div>
         <div class="copyright">
-          <p>Địa chỉ: Số 54 Triều Khúc, Quận Thanh Xuân, Hà Nội. Điện thoại hỗ trợ: 1900 0000 - Email: cskh@hotro.lyly.vn</p>
+          <p>Địa chỉ: Số 54 Triều Khúc, Quận Thanh Xuân, Hà Nội. Điện thoại hỗ trợ: 1900 0000 - Email:
+            cskh@hotro.lyly.vn</p>
           <p>Mã số doanh nghiệp: 99999999 do Sở Kế hoạch & Đầu tư TP Hà Nội cấp lần đầu ngày 12/11/2023</p>
           <p>Copyright © {{ year }} lyly</p>
         </div>
@@ -200,10 +201,21 @@ ul {
   width: 100%;
 }
 
+@media (max-width: 600px) {
+  .service-type {
+    flex-direction: column !important;
+    text-align: center;
+  }
+  .logo-list {
+    justify-content: center
+  }
+}
+
 .service-type {
   padding: 10px 0;
   margin: 15px auto;
-  width: 1200px;
+  max-width: 1200px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -240,7 +252,8 @@ ul {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  width: 1100px;
+  max-width: 1200px;
+  width: 100%;
   padding: 10px 0;
   margin: 0px auto;
   border-top: 1px solid #CE5A67;

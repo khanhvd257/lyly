@@ -5,7 +5,7 @@
         <div class="product-img">
           <div class="img-wrap">
             <div class="zoom-img">
-              <pic-zoom :url="product.image_url" :scale="3" alt=""/>
+              <pic-zoom style="border-radius: 8px; overflow: hidden" :url="product.image_url" :scale="3" alt=""/>
             </div>
           </div>
           <div class="flex mt-1">
@@ -80,7 +80,12 @@ export default {
     return {
       error: false,
       rules: {
-        required: value => !!value || 'Bắt buộc',
+        required: value => {
+          if (!value) {
+            this.error = true
+            return 'Yêu cầu nhập số lượng mua'
+          }
+        },
         counter: value => value.length > 0 && value || 'Lớn hơn 0',
         checkNum: value => {
           if (!value || isNaN(value) || value <= 0) {
@@ -139,14 +144,12 @@ export default {
       this.orderArr.push(this.formOrder)
     },
     handleAddToCart() {
-      let load = this.$loading.show()
       this.formCart.product_id = this.product.id
       this.formCart.quantity = this.formOrder.quantity
       addToCart(this.formCart).then((res) => {
-        console.log(res)
-        this.$moshaToast('Theem gio thanh cong',
+        this.$moshaToast('Thêm giỏ hàng thành công',
           {
-            type: 'warning',
+            type: 'success',
             transition: 'slide',
             hideProgressBar: 'true',
           })
@@ -159,13 +162,21 @@ export default {
             hideProgressBar: 'true',
           })
       })
-      load.hide()
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 600px) {
+  .product-container {
+    flex-direction: column;
+  }
+  .product-content .name {
+    font-size: 16px !important;
+  }
+}
+
 .product-container {
   display: flex;
   margin-bottom: 3rem;
@@ -181,10 +192,10 @@ export default {
       height: 350px;
 
       .zoom-img {
-        border-radius: 12px;
         width: 100%;
         height: 100%;
         object-fit: cover;
+
       }
     }
 

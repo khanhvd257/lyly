@@ -1,8 +1,8 @@
 <template>
   <div class="product">
-    <h3 v-if="title" class="header-text">{{title}}</h3>
+    <h3 v-if="title" class="header-text">{{ title }}</h3>
     <h3 v-else class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
-    <VRow class="container" justify="space-between">
+    <VRow class="container" justify="space-around" justify-sm="space-between">
       <div
         v-for="item in productList" :key="item.id"
       >
@@ -75,6 +75,30 @@ export default {
 
 <style lang="scss" scoped>
 
+@media (max-width: 600px) {
+  .product-content {
+    height: 250px !important;
+    width: 182px !important;;
+    border-radius: 6px !important;;
+    background-color: #fff;
+
+    .product-img {
+      padding: 6px 8px;
+      width: 100%;
+      height: 150px !important;;
+      border-radius: 6px !important;;
+      position: relative;
+
+      img {
+        overflow: hidden;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 8px;
+        height: 100%;
+      }
+    }
+  }
+}
 
 .product {
   display: flex;
@@ -84,10 +108,11 @@ export default {
   .container {
     max-width: 1200px;
     width: 100%;
+    row-gap: 1rem;
     margin: 0;
 
     .product-content {
-      margin-top: 2rem;
+      margin-top: 1rem;
       height: 280px;
       width: 220px;
       border-radius: 10px;

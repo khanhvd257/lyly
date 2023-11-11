@@ -10,21 +10,35 @@
     class="position-fixed hidden-md-and-up"
     color="indigo"
   >
-    <VBtn>
-      <v-icon>mdi-history</v-icon>
-      Recents
+    <VBtn v-if="userInfo == null">
+      <router-link to="/login">
+        <v-icon>material-symbols:login</v-icon>
+        Đăng nhập
+      </router-link>
     </VBtn>
-
-    <VBtn>
-      <v-icon>mdi-heart</v-icon>
-
-      Favorites
+    <VBtn v-if="userInfo == null">
+      <router-link to="/register">
+        <v-icon>tabler:registered</v-icon>
+        Đăng kí
+      </router-link>
     </VBtn>
-
-    <VBtn>
-      <v-icon>mdi-map-marker</v-icon>
-
-      Nearby
+    <VBtn v-if="userInfo != null">
+      <router-link to="/home/cart">
+        <v-icon>tdesign:cart</v-icon>
+        Giỏ hàng
+      </router-link>
+    </VBtn>
+    <VBtn v-if="userInfo != null">
+      <router-link to="/home/order">
+        <v-icon>icon-park-outline:order</v-icon>
+        Đơn hàng
+      </router-link>
+    </VBtn>
+    <VBtn v-if="userInfo != null">
+      <router-link to="/home">
+        <v-icon>material-symbols:person-outline</v-icon>
+        Cá nhân
+      </router-link>
     </VBtn>
   </VBottomNavigation>
 </template>
@@ -36,13 +50,25 @@ import HeaderNav from "@/layouts/components/headerNav.vue"
 
 export default {
   components: { HeaderNav, Footer, Icon, navigationBar },
+  computed: {
+    userInfo() {
+      return localStorage.getItem('access_token')
+    },
+  },
+
 }
 </script>
 <style lang="scss">
-.container {
-  width: 1200px;
-  margin: 100px auto;
+@media (max-width: 600px) {
+  .container {
+    margin: 50px auto !important;
+  }
+}
 
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 100px auto;
 }
 
 .index-nav-bar {

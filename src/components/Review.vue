@@ -4,7 +4,7 @@
     <swiper
       class="review swiper"
       grab-cursor
-      :slides-per-view="4"
+      :slides-per-view="numReview"
       :spaceBetween="100"
       :autoplay="{
         delay:3000,
@@ -58,11 +58,25 @@ export default {
       return this.reviewArr
     },
   },
+  created() {
+    window.addEventListener('resize', this.checkWindowWidth)
+  },
   data() {
     return {
+      numReview: 4,
       modules: [Autoplay, Pagination, Navigation],
     }
   },
+  methods:{
+    checkWindowWidth() {
+      let windowWidth = window.innerWidth
+      if (windowWidth <= 600) {
+        this.numReview = 1
+      } else {
+        this.numReview = 4
+      }
+    },
+  }
 }
 </script>
 

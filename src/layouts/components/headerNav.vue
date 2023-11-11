@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div class="index-nav-bar">
-      <div class="top-header">
+      <div class="top-header hidden-xs">
         <div>
           <ul class="sub-menu">
             <li>
@@ -117,8 +117,10 @@ export default {
 }
 .index-nav-bar {
   margin: 0 auto;
-  width: 1200px;
-  height: 90px;
+  max-width: 1200px;
+  max-height: 90px;
+  height: 100%;
+  width: 100%;
 
   .sub-menu {
     display: flex;
@@ -149,7 +151,6 @@ export default {
 
   .input-search {
     flex: 1;
-    margin-left: 2rem;
   }
 
 

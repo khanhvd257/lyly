@@ -3,7 +3,7 @@
     <h2 style="text-align: center; margin: 1rem 0; color: #CE5A67">THÔNG TIN ĐẶT SẢN PHẨM</h2>
     <VDivider/>
     <div class="pay-containter">
-      <h3 class="header-text">Thông tin sản phẩm</h3>
+      <h3 class="header-text sticky-top-50">Thông tin sản phẩm</h3>
       <div v-for="(item,index) in order" :key="index">
         <div class="product-detail">
           <img width="100" height="100"
@@ -11,7 +11,9 @@
                alt=""
           >
           <div class="name">
-            <span style="width: 30%; font-size: 14px">Tên sản phẩm: {{ item.product_detail.name }}</span>
+            <span class="clamp-text" style="width: 30%; font-size: 14px">Tên sản phẩm: {{
+                item.product_detail.name
+              }}</span>
             <span>Số lượng: {{ item.quantity }}</span>
             <span>Đơn giá: {{ formatPrice(item.product_detail.price) }}</span>
             <span>{{ item.total ? formatPrice(item.total) : formatPrice(item.flowPrice) }}</span>
@@ -19,23 +21,23 @@
         </div>
       </div>
       <VDivider style="margin: 2rem 0"/>
-      <h3 class="header-text">Thông tin người nhận</h3>
+      <h3 class="header-text sticky-top-50">Thông tin người nhận</h3>
       <div class="user">
         <v-row>
-          <v-col sm="6">
+          <v-col cols="12" sm="6">
             <VTextField label="Tên người nhận" v-model="name"
                         :rules="[rules.required]"
 
             />
           </v-col>
-          <v-col sm="6">
+          <v-col cols="12" sm="6">
             <VTextField label="Số điện thoại" v-model="phone"
                         :rules="[rules.required]"
             />
           </v-col>
         </v-row>
         <VRow>
-          <VCol sm="6">
+          <VCol cols="12" sm="6">
             <VSelect label="Tên tỉnh/ Thành phố" :items="provinceData"
                      item-title="full_name" item-value="code"
                      @update:modelValue="getDataDistrict" v-model="addressForm.province"
@@ -43,7 +45,7 @@
 
             />
           </VCol>
-          <VCol sm="6">
+          <VCol cols="12" sm="6">
             <VSelect label="Tên quận/ Huyện" :items="districtData"
                      item-title="full_name" item-value="code"
                      v-if="addressForm.province"
@@ -53,7 +55,7 @@
           </VCol>
         </VRow>
         <VRow>
-          <VCol sm="6">
+          <VCol cols="12" sm="6">
             <VSelect label="Tên xã/ Phường" :items="wardsData"
                      item-title="full_name" item-value="code"
                      v-model="addressForm.ward"
@@ -62,7 +64,7 @@
             />
           </VCol>
 
-          <VCol sm="6">
+          <VCol cols="12" sm="6">
             <VTextField label="Tên Đường" v-model="addressForm.stress"
                         :rules="[rules.required]" v-if="addressForm.ward"
             />
@@ -70,24 +72,23 @@
         </VRow>
       </div>
       <VDivider style="margin: 2rem 0"/>
-      <h3 class="header-text">Phương thưc thanh toán</h3>
+      <h3 class="header-text sticky-top-50">Phương thức thanh toán</h3>
       <ul class="logo-list">
-        <img width="60" height="60" src="@/assets/images/momo-logo.png" alt="momo" class="footer-payment-icon"/>
-
-        <img width="60" height="60" src="@/assets/images/viettelpay-logo.svg" alt="viettelpay"
-             class="footer-payment-icon"
-        />
-        <img width="60" height="60" src="@/assets/images/visa.svg" alt="visa-card" class="footer-payment-icon"
-             style="width: 50px"
-        />
-        <img width="60" height="60" src="@/assets/images/master-card.svg" alt="master-card"
-             class="footer-payment-icon"
-        />
+        <VRadioGroup v-model="formOrder.payMethod">
+          <VRadio v-for="item in payMethod" :key="item.value" :value="item.value">
+            <template v-slot:label>
+              <div style="display: flex; margin-bottom: 10px; align-items: center; gap: 10px">
+                <img width="60" height="60" :src="item.logo" :alt="item.value" class="footer-payment-icon"/>
+                <h4>{{ item.value }}</h4>
+              </div>
+            </template>
+          </VRadio>
+        </VRadioGroup>
       </ul>
 
 
       <div class="pay-footer">
-        <div class="info">
+        <div class="info hidden-xs">
           <span>Tên người nhận: {{ name }}</span>
           <span>Số điện thoại: {{ phone }}</span>
         </div>
@@ -111,6 +112,10 @@ import { getDistrict, getProvince, getWards } from "@/api/address"
 import { orderProduct } from "@/api/order"
 import { getInfoUser } from "@/api"
 import QRcode from "@/components/QRcode.vue"
+import momoLogo from '@/assets/images/momo-logo.png'
+import viettelpay from '@/assets/images/viettelpay-logo.svg'
+import visa from '@/assets/images/visa.svg'
+import cod from '@/assets/images/cod.png'
 
 export default {
   name: "preOrder",
@@ -125,6 +130,12 @@ export default {
       show: false,
       isValidate: false,
       userInfo: {},
+      payMethod: [
+        { logo: cod, value: 'Thanh toán khi nhận hàng' },
+        { logo: momoLogo, value: 'Momo' },
+        { logo: viettelpay, value: 'ViettelPay' },
+        { logo: visa, value: 'Visa' },
+      ],
       provinceData: [],
       wardsData: [],
       districtData: [],
@@ -136,6 +147,7 @@ export default {
         product_id: '',
         quantity: '',
         selectIds: [],
+        payMethod: '',
       },
       addressForm: {
         stress: '',
@@ -161,23 +173,27 @@ export default {
       this.phone = res.data.info.phone
     })
     this.formOrder.selectIds = this.selectedIds
-  },
+  }
+  ,
   computed: {
     isValidate() {
       if (this.addressForm.stress && this.addressForm.district &&
-        this.addressForm.ward && this.addressForm.province) {
+        this.addressForm.ward && this.addressForm.province && this.formOrder.payMethod) {
         return true
       } else {
         return false
       }
-    },
+    }
+    ,
     totalPrice() {
       if (this.selectedIds) {
         return this.order.reduce((acc, obj) => acc + obj.total, 0)
       }
       return this.order[0].flowPrice
-    },
-  },
+    }
+    ,
+  }
+  ,
 
   methods: {
     getDataProvince() {
@@ -199,10 +215,12 @@ export default {
         this.wardsData = res.data
         this.addressForm.ward = ''
       })
-    },
+    }
+    ,
     handleShowQR() {
       this.show = true
-    },
+    }
+    ,
     goPay() {
       const provice = this.provinceData.find(item => item.code == this.addressForm.province).full_name
       const district = this.districtData.find(i => i.code == this.addressForm.district).full_name
@@ -244,6 +262,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 600px) {
+
+  .product-detail {
+    img {
+      width: 120px;
+      height: 120px;
+    }
+
+    .name {
+      flex-direction: column;
+      font-size: 12px;
+      align-items: start!important;
+
+      span:first-child {
+        width: 100% !important;
+      }
+
+    }
+  }
+}
+
 .pay-containter {
   padding: 1rem 1rem;
 

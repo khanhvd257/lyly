@@ -45,11 +45,13 @@
         >
           <v-expansion-panel-text>
             <VRadioGroup>
-              <div style="display: flex; align-items: center; font-size: 13px" v-for="i in 5">
-                <VRadio color="primary" :value="i">
+              <div style="display: flex;flex-direction: column; font-size: 13px">
+                <VRadio v-for="item in filterPrice" :key="item" color="primary"
+                        :value="item.value"
+                >
                   <template v-slot:label>
-                    <div v-for="item in filterPrice" :key="item">
-                      {{ item }}
+                    <div>
+                      {{ item.title }}
                     </div>
                   </template>
                 </VRadio>
@@ -78,7 +80,19 @@ export default {
   data() {
     return {
       panel: ['price', 'rating', 'category'],
-      filterPrice: ['Dưới 99k', 'Khoảng 100k - 500k', 'Trên 500k'],
+      filterPrice: [{
+        title: 'Dưới 99k',
+        value: [0, 99000],
+      },
+        {
+          title: 'Khoảng 100k - 500k',
+          value: [100000, 500000],
+        },
+        {
+          title: 'Trên 500k',
+          value: [500000],
+        },
+      ],
       cateList: [],
     }
 

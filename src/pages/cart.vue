@@ -3,7 +3,7 @@
     <div class="cart">
       <div v-if="cartArr.length">
         <h3 class="header-text">Giỏ hàng</h3>
-        <div class="cart-title">
+        <div class="cart-title hidden-xs">
       <span>
         <div style="width: 5%"/>
       </span>
@@ -121,6 +121,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 600px) {
+  .order {
+    margin-left: 0 !important;
+  }
+  .cart {
+    margin-left: 0 !important;
+  }
+  .cart-item {
+    flex-direction: column;
+    gap: 1rem;
+
+    .item-img {
+      width: 100% !important;
+      height: 100% !important;
+
+      img {
+        width: 150px !important;
+        height: 150px !important;
+      }
+    }
+
+    .item-content {
+      width: 100% !important;
+    }
+
+    .item-price {
+      width: 100% !important;
+    }
+  }
+}
+
 .cart {
   display: flex;
   flex-direction: column;

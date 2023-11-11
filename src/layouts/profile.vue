@@ -18,10 +18,20 @@ export default {
 
 <style scoped>
 .container-profile {
-
   margin: 100px auto;
-  width: 1200px;
+  max-width: 1200px;
+  width: 100%;
   display: flex;
+}
+
+@media (max-width: 600px) {
+  .container-profile {
+    margin: 60px auto !important;
+  }
+
+  .content {
+    margin-left: 0px !important;;
+  }
 }
 
 .content {
@@ -30,6 +40,7 @@ export default {
   margin-left: 16px;
   border-radius: 8px;
   background-color: #fff;
-  padding: 6px 16px
+  padding: 6px 16px;
+  width: 100%;
 }
 </style>

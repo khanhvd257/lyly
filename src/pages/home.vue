@@ -30,7 +30,7 @@
           :modules="modules"
 
         >
-          <swiper-slide class="swiper-slide" v-for="item in cateArr">
+          <swiper-slide class="swiper-slide" v-for="item in cateArr" @click="handleFilterCate(item)" :key="item.id">
             <VCard variant="flat" class="content hover-card">
               <VAvatar size="60">
                 <img class="category-img"
@@ -51,10 +51,11 @@
   <ThreeBanner/>
 
   <!--  <Review/>-->
-  <ProductList/>
+  <ProductList :product-list="productList"/>
 </template>
 <script setup>
 import { getInfoUser } from "@/api"
+import { getProducts } from "@/api/product"
 import QRcode from "@/components/QRcode.vue"
 
 const token = localStorage.getItem('access_token')
@@ -74,7 +75,7 @@ import FavoriteProduct from "@/components/Product.vue"
 import ProductList from "@/components/productList.vue"
 import ThreeBanner from "@/components/ThreeBanner.vue"
 import HotProduct from "@/components/HotProduct.vue"
-import { getAllCategory } from "@/api/product"
+import { getAllCategory, getProducts } from "@/api/product"
 import BestSell from "@/pages/product/bestSell.vue"
 
 export default {
@@ -91,14 +92,17 @@ export default {
   mounted() {
   },
   created() {
+    this.checkWindowWidth()
     window.addEventListener('resize', this.checkWindowWidth)
     this.getDataCate()
+    this.getDataProduct()
   },
   data() {
 
     return {
       numberCate: 9,
       cateArr: [],
+      productList: [],
       bannerList: [
         'banner1', 'banner2', 'banner3',
       ],
@@ -119,13 +123,29 @@ export default {
         console.log(res)
       })
     },
+    getDataProduct() {
+      getProducts().then(res => {
+        this.productList = res.data
+      })
+
+    },
     checkWindowWidth() {
       let windowWidth = window.innerWidth
       if (windowWidth <= 600) {
         this.numberCate = 3
+      } else if (windowWidth > 600 && windowWidth <= 1000) {
+        this.numberCate = 5
       } else {
         this.numberCate = 9
       }
+    },
+    handleFilterCate(val) {
+      this.$router.push({
+        name: 'search',
+        query: {
+          category_id: val.id,
+        },
+      })
     },
   },
 }

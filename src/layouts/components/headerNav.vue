@@ -151,6 +151,7 @@ export default {
 
   .input-search {
     flex: 1;
+    position: relative;
   }
 
 

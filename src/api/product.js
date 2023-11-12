@@ -11,7 +11,7 @@ export function getAllCategory(params) {
 
 export function getAllProduct(params) {
   return request({
-    url: '/product',
+    url: '/products',
     headers: { 'Content-Type': 'application/json' },
     method: Method.GET,
     params: params,
@@ -39,6 +39,14 @@ export function getProducts(params) {
   })
 }
 
+export function getTop5Product(params) {
+  return request({
+    url: '/recommend',
+    headers: { 'Content-Type': 'application/json' },
+    method: Method.GET,
+    params: params,
+  })
+}
 
 export function getDetailProduct(id) {
   return request({

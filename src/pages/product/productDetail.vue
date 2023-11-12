@@ -63,6 +63,8 @@ import { getDetailProduct } from "@/api/product"
 import PreOrder from "@/pages/order/preOrder.vue"
 import { addToCart } from "@/api/order"
 import { getReviewProduct } from "@/api/rating"
+import moshaToast from "mosha-vue-toastify"
+import router from "@/router"
 
 export default {
   name: "product_detail",
@@ -137,31 +139,56 @@ export default {
         this.product = res.data
       })
     },
-    payProduct() {
-      this.statusOrder = 1
-      this.formOrder.flowPrice = this.product.price * this.formOrder.quantity
-      this.formOrder.product_detail = this.product
-      this.orderArr.push(this.formOrder)
+    checkLogin() {
+      return localStorage.getItem('access_token')
     },
-    handleAddToCart() {
-      this.formCart.product_id = this.product.id
-      this.formCart.quantity = this.formOrder.quantity
-      addToCart(this.formCart).then((res) => {
-        this.$moshaToast('Thêm giỏ hàng thành công',
-          {
-            type: 'success',
-            transition: 'slide',
-            hideProgressBar: 'true',
-          })
-
-      }).catch(e => {
-        this.$moshaToast('Lỗi xảy ra khi thêm',
+    payProduct() {
+      if (this.checkLogin()) {
+        this.statusOrder = 1
+        this.formOrder.flowPrice = this.product.price * this.formOrder.quantity
+        this.formOrder.product_detail = this.product
+        this.orderArr.push(this.formOrder)
+      } else {
+        this.$moshaToast('Bạn chưa đăng nhập',
           {
             type: 'warning',
             transition: 'slide',
-            hideProgressBar: 'true',
+            timeout: 3000,
           })
-      })
+        router.push("/login")
+
+      }
+    },
+    handleAddToCart() {
+      if (this.checkLogin()) {
+        this.formCart.product_id = this.product.id
+        this.formCart.quantity = this.formOrder.quantity
+        addToCart(this.formCart).then((res) => {
+          this.$moshaToast('Thêm giỏ hàng thành công',
+            {
+              type: 'success',
+              transition: 'slide',
+              hideProgressBar: 'true',
+            })
+
+        }).catch(e => {
+          this.$moshaToast('Lỗi xảy ra khi thêm',
+            {
+              type: 'warning',
+              transition: 'slide',
+              hideProgressBar: 'true',
+            })
+        })
+      } else {
+        this.$moshaToast('Bạn chưa đăng nhập',
+          {
+            type: 'warning',
+            transition: 'slide',
+            timeout: 3000,
+          })
+        router.push("/login")
+      }
+
     },
   },
 }

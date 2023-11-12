@@ -2,7 +2,7 @@
   <div class="product">
     <h3 v-if="title" class="header-text">{{ title }}</h3>
     <h3 v-else class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
-    <VRow class="container" justify="space-around" justify-sm="space-between">
+    <VRow style="gap: 10px" class="container">
       <div
         v-for="item in productList" :key="item.id"
       >
@@ -38,29 +38,23 @@
 </template>
 
 <script>
-import { getProducts } from "@/api/product"
 
 export default {
   name: "ProductList",
   props: {
     title: '',
-
+    productList: []
   },
   data() {
     return {
-      productList: [],
+
     }
   },
   created() {
-    this.getData()
+
   },
   methods: {
-    getData() {
-      getProducts().then(res => {
-        this.productList = res.data
-      })
 
-    },
     handleToProduct(val) {
       this.$router.push({
         name: 'productDetail',

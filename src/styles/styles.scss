@@ -1,7 +1,8 @@
-$priamry_color: #FF6C22;
-$accent_color: #FF6C22;
+@use "@core/scss/base/mixins";
+
+$primary_color: '#FA7070';
 .hover-card:hover {
-  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px !important;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px!important;
   transition: all 100ms ease-in-out;
   position: relative;
   cursor: pointer;
@@ -13,7 +14,7 @@ $accent_color: #FF6C22;
 
 .cursor:hover {
   cursor: pointer;
-  color: $priamry_color !important;
+  color: $primary_color !important;
 }
 
 .header-text {
@@ -82,10 +83,11 @@ $accent_color: #FF6C22;
 .v-overlay__scrim {
   background: rgb(237, 237, 237, .5) !important
 }
+
 @media (max-width: 600px) {
-  .sticky-top-50{
+  .sticky-top-50 {
     position: sticky;
-    top: 50px!important;
+    top: 50px !important;
     z-index: 1000;
   }
 }

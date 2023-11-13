@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/lyly-web/assets/logo_tron-446976eb.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LYLY - Mang đến kỉ niệm</title>
+  <link rel="stylesheet" type="text/css" href="/lyly-web/loader.css" />
+  <script type="module" crossorigin src="/lyly-web/assets/index-d8bdc496.js"></script>
+  <link rel="stylesheet" href="/lyly-web/assets/index-13dd412c.css">
+</head>
+
+<body>
+  <div id="app">
+    <div id="loading-bg">
+      <div class="loading-logo">
+        <!-- SVG Logo -->
+        <img class="" width="120" height="120" src="/lyly-web/assets/LY LY-18a8a3d2.gif" alt="">
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const loaderColor = localStorage.getItem('materio-initial-loader-bg') || '#FFFFFF'
+    const primaryColor = localStorage.getItem('materio-initial-loader-color') || '#0df168'
+
+    if (loaderColor)
+      document.documentElement.style.setProperty('--initial-loader-bg', loaderColor)
+
+    if (primaryColor)
+      document.documentElement.style.setProperty('--initial-loader-color', primaryColor)
+  </script>
+</body>
+
+</html>

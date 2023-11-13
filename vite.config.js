@@ -50,7 +50,7 @@ export default defineConfig({
       'apexcharts': fileURLToPath(new URL('node_modules/apexcharts-clevision', import.meta.url)),
     },
   },
-  base: '/lyly-web/',
+  base: '/',
   build: {
     chunkSizeWarningLimit: 5000,
   },

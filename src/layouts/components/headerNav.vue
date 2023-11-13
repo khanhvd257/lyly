@@ -6,12 +6,14 @@
           <ul class="sub-menu">
             <li>
               <router-link to="/facebook">
-                <VIcon icon="bi:instagram"/> Instagram
+                <VIcon icon="bi:instagram"/>
+                Instagram
               </router-link>
             </li>
-            <li >
+            <li>
               <router-link to="/instagram">
-                <VIcon icon="basil:facebook-messenger-outline"/> Messenger
+                <VIcon icon="basil:facebook-messenger-outline"/>
+                Messenger
               </router-link>
             </li>
           </ul>
@@ -55,7 +57,7 @@
       <div class="nav-container">
         <div class="hidden-md-and-down logo">
           <RouterLink to="/">
-            <img src="../../assets/images/logo/LYLY%20STORE.png" width="180" height="60" alt=""/>
+            <img src="../../../src/assets/images/logo/lyly.png" width="180" height="60" alt=""/>
           </RouterLink>
         </div>
         <div class="input-search">
@@ -111,10 +113,11 @@ export default {
 
 }
 
-.top-header{
+.top-header {
   display: flex;
   justify-content: space-between;
 }
+
 .index-nav-bar {
   margin: 0 auto;
   max-width: 1200px;

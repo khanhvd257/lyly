@@ -18,7 +18,7 @@
       </swiper>
       <input id="search-box-input" ref="search-input" type="text"
              v-model="searchKey"
-             autocomplete="off" @keydown.enter=""
+             autocomplete="off" @keydown.enter="handleSearch"
       />
     </div>
     <div class="search-btn" @click="handleSearch">
@@ -82,6 +82,7 @@ export default {
         name: 'search',
         query: { search_key: this.searchKey },
       })
+      this.showRecommend= false
     },
 
   },

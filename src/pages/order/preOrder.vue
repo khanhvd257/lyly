@@ -95,7 +95,7 @@
         <span class="price-total">
           {{ formatPrice(totalPrice) }}
     </span>
-        <VBtn :disabled="!isValidate" color="success" @click="handleShowQR">Thanh toán</VBtn>
+        <VBtn :disabled="!isValidate" color="success" @click="goPay">Thanh toán</VBtn>
       </div>
     </div>
   </v-card>
@@ -218,7 +218,8 @@ export default {
     }
     ,
     handleShowQR() {
-      this.show = true
+      // this.show = true
+
     }
     ,
     goPay() {

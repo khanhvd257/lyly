@@ -132,7 +132,7 @@ export default {
     checkWindowWidth() {
       let windowWidth = window.innerWidth
       if (windowWidth <= 600) {
-        this.numberCate = 3
+        this.numberCate = 4
       } else if (windowWidth > 600 && windowWidth <= 1000) {
         this.numberCate = 5
       } else {

@@ -48,3 +48,11 @@ export function cancelOrder(id) {
     needToken: true,
   })
 }
+export function doneOrder(id) {
+  return request({
+    url: `/order/${id}/done`,
+    headers: { 'Content-Type': 'application/json' },
+    method: Method.PUT,
+    needToken: true,
+  })
+}

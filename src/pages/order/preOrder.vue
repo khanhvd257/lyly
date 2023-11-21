@@ -32,7 +32,7 @@
           </v-col>
           <v-col cols="12" sm="6">
             <VTextField label="Số điện thoại" v-model="phone"
-                        :rules="[rules.required]"
+                        :rules="[rules.required, rules.regexPhoneNumber]"
             />
           </v-col>
         </v-row>
@@ -162,6 +162,13 @@ export default {
           }
           return true
         },
+        regexPhoneNumber: phone => {
+
+          const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g
+
+          return phone.match(regexPhoneNumber) ? true : false
+
+        },
         counter: value => value.length > 0 || 'Lớn hơn 0',
       },
     }
@@ -274,7 +281,7 @@ export default {
     .name {
       flex-direction: column;
       font-size: 12px;
-      align-items: start!important;
+      align-items: start !important;
 
       span:first-child {
         width: 100% !important;

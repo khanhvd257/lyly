@@ -167,6 +167,8 @@ export default {
     handleSave() {
       let load = this.$loading.show()
       updateUser(this.formUser).then(res => {
+        const objectJSON = JSON.stringify(res.data)
+        localStorage.setItem('infoUser', objectJSON)
         this.$moshaToast('Sửa thành công',
           {
             type: 'success',

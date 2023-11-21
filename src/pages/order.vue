@@ -13,8 +13,8 @@
       <v-tab value="pending" prepend-icon="material-symbols:pending-actions">
         Chờ xác nhận
       </v-tab>
-      <v-tab value="confirmed" prepend-icon="fluent-mdl2:waitlist-confirm">
-        Đã xác nhận
+      <v-tab value="confirmed" prepend-icon="la:shipping-fast">
+        Đang vận chuyển
       </v-tab>
       <v-tab value="done" prepend-icon="ic:sharp-done-all">
         Hoàn thành
@@ -32,11 +32,11 @@
           </div>
           <div class="order-status">
             <span>Trạng thái đơn hàng: </span>
-            <VChip v-if="order.status == 'Pending'" color="primary">
+            <VChip v-if="order.status == 'Pending'" color="warning">
               Chờ xác nhận
             </VChip>
-            <VChip v-if="order.status == 'Confirmed'" color="green">
-              Đã xác nhận
+            <VChip v-if="order.status == 'Confirmed'" color="primary">
+              Đang vận chuyển
             </VChip>
             <VChip v-if="order.status == 'Cancel'" color="error">
               Đã hủy
@@ -64,9 +64,13 @@
                 Thành tiền:
                 <span>{{ formatPrice(item.price) }}</span>
                 <VBtn class="ml-1" density="compact" variant="outlined" @click="handleRating(item)"
-                      v-if="order.status == 'Done'"
+                      v-if="order.status == 'Done' && item.isRating ==0"
                 >Đánh giá
                 </VBtn>
+                <VChip v-if="order.status == 'Done' && item.isRating ==1" variant="elevated" color="success"
+                >
+                  Đã đánh giá
+                </VChip>
               </div>
 
             </div>
@@ -81,6 +85,11 @@
           <VBtn style="margin: 6px 2px" @click="handleCancelOrder(order.id)" v-if="order.status == 'Pending'"
                 variant="outlined"
           >Hủy đơn hàng
+          </VBtn>
+          <VBtn color="success" style="margin: 6px 2px" @click="handleDoneOrder(order.id)"
+                v-if="order.status == 'Confirmed'"
+                variant="outlined"
+          >Hoàn thành đơn hàng
           </VBtn>
         </div>
       </VCard>
@@ -131,7 +140,7 @@
 </template>
 
 <script>
-import { cancelOrder, getAllOrder } from "@/api/order"
+import { cancelOrder, doneOrder, getAllOrder } from "@/api/order"
 import { createReview } from "@/api/rating"
 
 export default {
@@ -173,19 +182,21 @@ export default {
     },
     handleSubmit() {
       createReview(this.formRating).then(res => {
-        this.$moshaToast('Đánh giá thành công',
+        this.$moshaToast(res.message,
           {
             type: 'success',
             transition: 'slide',
             hideProgressBar: 'true',
           })
         this.dialog = false
+        this.getDataOrder()
       })
     },
 
     handleRating(val) {
       this.formRating = {
         product_id: val.product.id,
+        order_id: val.id,
         rating: 5,
         comment: '',
         image_url: '',
@@ -209,6 +220,26 @@ export default {
           })
       })
     },
+    handleDoneOrder(id) {
+      doneOrder(id).then(res => {
+        this.getDataOrder()
+        this.$moshaToast('Hoàn thành đơn hàng vui lòng đánh giá nhận thưởng',
+          {
+            type: 'success',
+            transition: 'slide',
+            hideProgressBar: 'true',
+            timeOut: 2000,
+          })
+      }).catch(err => {
+        this.$moshaToast(err.response.data.messages,
+          {
+            type: 'warning',
+            transition: 'slide',
+            hideProgressBar: 'true',
+            timeOut: 2000,
+          })
+      })
+    },
   },
 }
 </script>
@@ -216,7 +247,7 @@ export default {
 <style lang="scss" scoped>
 
 @media (max-width: 600px) {
-  .sticky-top{
+  .sticky-top {
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 60px;

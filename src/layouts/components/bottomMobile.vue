@@ -3,6 +3,12 @@
     class="position-fixed hidden-md-and-up"
     color="indigo"
   >
+    <VBtn>
+      <router-link to="/">
+        <v-icon>mdi-home</v-icon>
+        Trang chủ
+      </router-link>
+    </VBtn>
     <VBtn v-if="userInfo == null">
       <router-link to="/login">
         <v-icon>material-symbols:login</v-icon>
@@ -15,12 +21,7 @@
         Đăng kí
       </router-link>
     </VBtn>
-    <VBtn v-if="userInfo != null">
-      <router-link to="/">
-        <v-icon>mdi-home</v-icon>
-        Trang chủ
-      </router-link>
-    </VBtn>
+
     <VBtn v-if="userInfo != null">
       <router-link to="/home/cart">
         <v-icon>tdesign:cart</v-icon>

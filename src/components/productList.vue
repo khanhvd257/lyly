@@ -2,7 +2,7 @@
   <div class="product">
     <h3 v-if="title" class="header-text">{{ title }}</h3>
     <h3 v-else class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
-    <VRow style="gap: 10px" class="container">
+    <VRow style="gap: 10px" justify="space-around" justify-sm="space-between" class="container">
       <div
         v-for="item in productList" :key="item.id"
       >
@@ -108,7 +108,7 @@ export default {
     .product-content {
       margin-top: 1rem;
       height: 280px;
-      width: 220px;
+      width: 215px;
       border-radius: 10px;
       background-color: #fff;
 

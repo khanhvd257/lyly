@@ -57,7 +57,7 @@
       <div class="nav-container">
         <div class="hidden-md-and-down logo">
           <RouterLink to="/">
-            <img src="../../../src/assets/images/logo/lyly.png" width="180" height="60" alt=""/>
+            <img src="../../../src/assets/images/logo/LYLY_STORE.png" width="180" height="60" alt=""/>
           </RouterLink>
         </div>
         <div class="input-search">

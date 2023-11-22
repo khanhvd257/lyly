@@ -29,7 +29,7 @@
               <span>{{ formatDate(item.created_at) }}</span>
 
             </div>
-            <div class="body">
+            <div class="body clamp-text">
               {{ item.comment }}
             </div>
           </div>

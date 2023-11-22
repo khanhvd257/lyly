@@ -1,20 +1,19 @@
 <template>
-  <div>
-    <p class="decode-result">
-      Last result: <b>{{ result }}</b>
-    </p>
-    <!--    <qrcode-vue :value="value" :size="300" level="H"/>-->
+  <VCard elevation="4" width="180">
+    <VCardText style="text-align: center;">
+      <qrcode-vue :value="value" :size="120" level="H"/>
+      <span style="text-align: center; margin-bottom: 1rem;">Quét QR để xem trên máy điện thoại</span>
+    </VCardText>
+  </VCard>
+  <!--    <qrcode-stream style="width: 300px; height: 300px; border-radius: 8px" v-if="isShow"-->
+  <!--                   :paused="paused" @detect="onDetect" @error="onError" @camera-on="resetValidationState"-->
+  <!--    >-->
+  <!--      <div v-if="validationSuccess" class="validation-success">This is a URL</div>-->
 
-    <qrcode-stream style="width: 300px; height: 300px; border-radius: 8px" v-if="isShow"
-                   :paused="paused" @detect="onDetect" @error="onError" @camera-on="resetValidationState"
-    >
-      <div v-if="validationSuccess" class="validation-success">This is a URL</div>
+  <!--      <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>-->
 
-      <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>
-
-      <div v-if="validationPending" class="validation-pending">Long validation in progress...</div>
-    </qrcode-stream>
-  </div>
+  <!--      <div v-if="validationPending" class="validation-pending">Long validation in progress...</div>-->
+  <!--    </qrcode-stream>-->
 </template>
 
 <script>
@@ -22,62 +21,64 @@ import { QrcodeStream } from 'vue-qrcode-reader'
 import QrcodeVue from 'qrcode.vue'
 
 export default {
-  components: { QrcodeStream, QrcodeVue },
-  props:{
-    isShow: true
+  name: 'QRcode',
+  components: { QrcodeVue },
+  props: {
+    isShow: true,
+    value: '',
   },
 
   data() {
     return {
-      value: '00020101021138580010A000000727012800069704070114190365724760110208QRIBFTTA53037045802VN830084006304C3D7',
-      isValid: undefined,
-      paused: false,
-      result: null,
+      // isValid: undefined,
+      // paused: false,
+      // result: null,
     }
   },
 
   computed: {
-    validationPending() {
-      return this.isValid === undefined && this.paused
-    },
-
-    validationSuccess() {
-      return this.isValid === true
-    },
-
-    validationFailure() {
-      return this.isValid === false
-    },
+    // validationPending() {
+    //   return this.isValid === undefined && this.paused
+    // },
+    //
+    // validationSuccess() {
+    //   return this.isValid === true
+    // },
+    //
+    // validationFailure() {
+    //   return this.isValid === false
+    // },
   },
 
   methods: {
-    onError: console.error,
-
-    resetValidationState() {
-      this.isValid = undefined
-    },
-
-    async onDetect([firstDetectedCode]) {
-      this.result = firstDetectedCode.rawValue
-      this.paused = true
-
-      // pretend it's taking really long
-      await this.timeout(3000)
-      this.isValid = this.result.startsWith('http')
-
-      // some more delay, so users have time to read the message
-      await this.timeout(2000)
-      this.paused = false
-      this.$router.push({
-        name: 'order'
-      })
-    },
-
-    timeout(ms) {
-      return new Promise((resolve) => {
-        window.setTimeout(resolve, ms)
-      })
-    },
+    //   onError: console.error,
+    //
+    //   resetValidationState() {
+    //     this.isValid = undefined
+    //   },
+    //
+    //   async onDetect([firstDetectedCode]) {
+    //     this.result = firstDetectedCode.rawValue
+    //     this.paused = true
+    //
+    //     // pretend it's taking really long
+    //     await this.timeout(3000)
+    //     this.isValid = this.result.startsWith('http')
+    //
+    //     // some more delay, so users have time to read the message
+    //     await this.timeout(2000)
+    //     this.paused = false
+    //     this.$router.push({
+    //       name: 'order'
+    //     })
+    //   },
+    //
+    //   timeout(ms) {
+    //     return new Promise((resolve) => {
+    //       window.setTimeout(resolve, ms)
+    //     })
+    //   },
+    // },
   },
 }
 </script>

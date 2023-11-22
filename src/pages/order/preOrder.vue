@@ -100,9 +100,6 @@
     </div>
   </v-card>
   <VDialog transition="" v-model="show">
-    <div style="text-align: center">
-      <QRcode :is-show="show"/>
-    </div>
   </VDialog>
 
 </template>
@@ -111,7 +108,6 @@
 import { getDistrict, getProvince, getWards } from "@/api/address"
 import { orderProduct } from "@/api/order"
 import { getInfoUser } from "@/api"
-import QRcode from "@/components/QRcode.vue"
 import momoLogo from '@/assets/images/momo-logo.png'
 import viettelpay from '@/assets/images/viettelpay-logo.svg'
 import visa from '@/assets/images/visa.svg'
@@ -119,7 +115,7 @@ import cod from '@/assets/images/cod.png'
 
 export default {
   name: "preOrder",
-  components: { QRcode },
+  components: {  },
 
   props: {
     order: [],

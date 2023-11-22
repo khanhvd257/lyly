@@ -1,6 +1,7 @@
 <template>
   <div class="searh-container">
-    <div class="search-optional">
+    <div class="search-optional hidden-xs">
+
       <div style="text-align: center;padding: 12px 3px">
         <h3>
           Tìm kiếm theo

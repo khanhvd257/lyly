@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite --host",
-      "build": "vite build",
+    "build": "vite build",
     "preview": "vite preview --port 5050",
     "lint": "eslint . -c .eslintrc.js --fix --ext .ts,.js,.vue,.tsx,.jsx",
     "build:icons": "node src/@iconify/build-icons.js",
@@ -23,7 +23,6 @@
     "axios-mock-adapter": "^1.21.4",
     "chart.js": "^4.1.2",
     "eslint-import-resolver-alias": "^1.1.2",
-    "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "mosha-vue-toastify": "^1.0.23",
     "pinia": "^2.0.36",

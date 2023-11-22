@@ -67,7 +67,7 @@
                       v-if="order.status == 'Done' && item.isRating ==0"
                 >Đánh giá
                 </VBtn>
-                <VChip v-if="order.status == 'Done' && item.isRating ==1" variant="elevated" color="success"
+                <VChip size="small" style="margin-left: 8px" v-if="order.status == 'Done' && item.isRating ==1" variant="elevated" color="success"
                 >
                   Đã đánh giá
                 </VChip>

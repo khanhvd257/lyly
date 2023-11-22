@@ -8,10 +8,10 @@
               <pic-zoom style="border-radius: 8px; overflow: hidden" :url="product.image_url" :scale="3" alt=""/>
             </div>
           </div>
-          <div class="flex mt-1">
-            <VIcon icon="mdi-heart"/>
-            Thêm vào yêu thích
-          </div>
+<!--          <div class="flex mt-1">-->
+<!--            <VIcon icon="mdi-heart"/>-->
+<!--            Thêm vào yêu thích-->
+<!--          </div>-->
         </div>
         <div class="product-content">
           <span class="name">{{ product.name }}</span>
@@ -41,6 +41,9 @@
           </div>
 
         </div>
+        <div class="QR-mobile mt-5 hidden-xs">
+          <QRcode :value="urlPath"/>
+        </div>
       </div>
       <div class="mt-2">
         <Review :review-arr="reviewList"/>
@@ -63,12 +66,12 @@ import { getDetailProduct } from "@/api/product"
 import PreOrder from "@/pages/order/preOrder.vue"
 import { addToCart } from "@/api/order"
 import { getReviewProduct } from "@/api/rating"
-import moshaToast from "mosha-vue-toastify"
+import QRcode from "@/components/QRcode.vue"
 import router from "@/router"
 
 export default {
   name: "product_detail",
-  components: { PreOrder, Review, PicZoom },
+  components: { PreOrder, Review, PicZoom, QRcode },
   created() {
     this.getProduct(this.$route.query.id)
     this.getDataReview()
@@ -77,6 +80,9 @@ export default {
     error() {
       return this.product.quantity <= 0
     },
+    urlPath(){
+      return new URL(location.href)
+    }
   },
   data() {
     return {

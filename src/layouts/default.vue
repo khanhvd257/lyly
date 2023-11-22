@@ -63,7 +63,7 @@ export default {
 <style lang="scss">
 @media (max-width: 600px) {
   .container {
-    margin: 50px auto !important;
+    margin: 60px auto !important;
   }
 }
 

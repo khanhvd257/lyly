@@ -115,13 +115,13 @@ import cod from '@/assets/images/cod.png'
 
 export default {
   name: "preOrder",
-  components: {  },
+  components: {},
 
   props: {
     order: [],
     selectedIds: [],
   },
-  data() {
+  data: function () {
     return {
       show: false,
       isValidate: false,
@@ -159,13 +159,9 @@ export default {
           return true
         },
         regexPhoneNumber: phone => {
-
-          const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g
-
-          return phone.match(regexPhoneNumber) ? true : false
-
+          const regexPhoneNumber = /^(84|0[3|5|7|8|9])+([0-9]{8})\b$/
+          return regexPhoneNumber.test(phone) ? true : 'Số điện thoại không hợp lệ'
         },
-        counter: value => value.length > 0 || 'Lớn hơn 0',
       },
     }
   },

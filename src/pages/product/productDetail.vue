@@ -1,13 +1,18 @@
 <template>
   <template v-if="statusOrder===0">
     <div style="background-color: white; padding: .2rem 1.6rem; border-radius: 12px">
+      <VBreadcrumbs :items="cateArr">
+        <template v-slot:prepend>
+          <VIcon size="small" icon="ic:baseline-home"/>
+        </template>
+      </VBreadcrumbs>
       <div class="product-container">
         <div class="product-img">
-          <div class="img-wrap">
-            <div class="zoom-img">
-              <inner-image-zoom style="border-radius: 8px; overflow: hidden" :src="product.image_url"/>
-            </div>
-          </div>
+          <inner-image-zoom width="350" height="350" style="border-radius: 8px;"
+                            :zoomSrc="product.image_url" :srcSet="product.image_url"
+          />
+          <!--            </div>-->
+          <!--          </div>-->
           <!--          <div class="flex mt-1">-->
           <!--            <VIcon icon="mdi-heart"/>-->
           <!--            Thêm vào yêu thích-->
@@ -17,7 +22,7 @@
           <span class="name">{{ product.name }}</span>
           <div class="review">
             <div style="display: flex;align-items: center;">
-              <strong>{{ parseFloat(product.avg_rating) }}</strong>
+              <strong>{{ parseFloat(product.avg_rating).toFixed(1) }}</strong>
               <VRating disabled half-increments :model-value="product.avg_rating" size="small"/>
             </div>
             <span>&nbsp; | {{ product.total_sold }} sản phẩm đã bán</span>
@@ -41,7 +46,7 @@
           </div>
 
         </div>
-        <div class="QR-mobile mt-5 hidden-xs">
+        <div style="align-self: center" class="QR-mobile hidden-xs">
           <QRcode :value="urlPath"/>
         </div>
       </div>
@@ -77,6 +82,7 @@ export default {
   created() {
     this.getProduct(this.$route.query.id)
     this.getDataReview()
+    console.log(this.$router.currentRoute._value.fullPath)
   },
   computed: {
     error() {
@@ -132,6 +138,7 @@ export default {
       // 1 là trang thanh toán;
       // 2 là hoàn thành
       statusOrder: 0,
+      cateArr: [],
 
     }
   },
@@ -139,12 +146,22 @@ export default {
     getDataReview() {
       getReviewProduct({ product_id: this.$route.query.id }).then(res => {
         this.reviewList = res.data
-        console.log(this.reviewList)
       })
     },
     getProduct(id) {
       getDetailProduct(id).then(res => {
         this.product = res.data
+        this.cateArr = [
+          { title: 'Trang chủ', href: '/' },
+          {
+            title: this.product.category.name,
+            href: `search?category_id=${this.product.category.id}`,
+          }
+          , {
+            title: this.product.name,
+
+          },
+        ]
       })
     },
     checkLogin() {
@@ -157,6 +174,8 @@ export default {
         this.formOrder.product_detail = this.product
         this.orderArr.push(this.formOrder)
       } else {
+        localStorage.setItem('redirectPath', this.$router.currentRoute._value.fullPath)
+        console.log(this.$router.currentRoute.value.path)
         this.$moshaToast('Bạn chưa đăng nhập',
           {
             type: 'warning',
@@ -188,6 +207,7 @@ export default {
             })
         })
       } else {
+        localStorage.setItem('redirectPath', this.$router.currentRoute._value.fullPath)
         this.$moshaToast('Bạn chưa đăng nhập',
           {
             type: 'warning',
@@ -206,6 +226,10 @@ export default {
 @media (max-width: 600px) {
   .product-container {
     flex-direction: column;
+
+    .product-img {
+      margin-right: 0 !important;
+    }
   }
   .product-content .name {
     font-size: 16px !important;
@@ -215,7 +239,6 @@ export default {
 .product-container {
   display: flex;
   margin-bottom: 3rem;
-  margin-top: 1rem;
 
   .product-img {
     display: flex;
@@ -226,12 +249,12 @@ export default {
       width: 350px;
       height: 350px;
 
-      .zoom-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-
-      }
+      //.zoom-img {
+      //  width: 100%;
+      //  height: 100%;
+      //  object-fit: cover;
+      //
+      //}
     }
 
   }

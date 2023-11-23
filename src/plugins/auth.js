@@ -4,6 +4,7 @@ export function requireAuth(to, from, next) {
   if (token) {
     next(); // Cho phép truy cập tới tuyến (route) tiếp theo
   } else {
+    localStorage.setItem('redirectPath', this.$router.currentRoute._value.fullPath)
     next('/login'); // Chuyển hướng đến trang đăng nhập nếu không có token
   }
 }

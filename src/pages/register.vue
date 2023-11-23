@@ -16,8 +16,7 @@ const isPasswordVisible = ref(false)
 
 </script>
 <script>
-import { getInfoUser, login } from "@/api"
-import router from "@/router"
+
 import { register } from "@/api/user"
 
 export default {
@@ -27,6 +26,29 @@ export default {
         username: '',
         password: '',
         password_confirmation: '',
+      },
+      rules: {
+        required: value => {
+          if (!value) {
+            return 'Trường này phải điền'
+          }
+          return true
+        },
+        passwordLength: password => {
+          const regexPassword = /^.{8,}$/
+          return regexPassword.test(password) ? true : 'Mật khẩu phải ít nhất 8 ký tự'
+        },
+        usernameLength: username => {
+          const regexPassword = /^.{6,}$/
+          return regexPassword.test(username) ? true : 'Tên tài khoản phải ít nhất 6 ký tự'
+        },
+        noWhitespace: username => {
+          const regexNoWhitespace = /^\S*$/
+          return regexNoWhitespace.test(username) ? true : 'Tên đăng nhập không được chứa dấu cách'
+        },
+        passwordMatch: (value) => {
+          return value === this.registerForm.password ? true : 'Mật khẩu không khớp'
+        },
       },
       error: false,
     }
@@ -45,6 +67,7 @@ export default {
             transition: 'slide',
             timeout: 3000,
           })
+        this.$router.push('/login')
       }).catch(err => {
         this.error = true
       })
@@ -63,22 +86,15 @@ export default {
       <VCardItem class="justify-center">
         <template #prepend>
           <div class="d-flex">
-            <img height="100" width="100" src="../assets/images/logo/logo_tron.png" alt=""/>
+            <router-link to="/">
+              <img height="100" width="100" src="../assets/images/logo/logo_tron.png" alt=""/>
+            </router-link>
           </div>
         </template>
         <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
           LYLY Store
         </VCardTitle>
       </VCardItem>
-
-      <!--      <VCardText class="pt-2">-->
-      <!--        <h5 class="text-h5 font-weight-semibold mb-1">-->
-      <!--          Chào mừng bạn đến với trang quản trị của LYLY Store! 👋🏻-->
-      <!--        </h5>-->
-      <!--        <p class="mb-0">-->
-      <!--          Vui lòng đăng nhập trước khi bắt đầu-->
-      <!--        </p>-->
-      <!--      </VCardText>-->
 
       <VCardText>
         <VForm>
@@ -88,6 +104,7 @@ export default {
               <VTextField
                 v-model="registerForm.username"
                 label="Tên đăng nhập"
+                :rules="[rules.required, rules.noWhitespace, rules.usernameLength]"
                 type="text"
               />
             </VCol>
@@ -95,6 +112,7 @@ export default {
               <VTextField
                 v-model="registerForm.password"
                 label="Mật khẩu"
+                :rules="[rules.required, rules.passwordLength]"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
@@ -105,63 +123,34 @@ export default {
               <VTextField
                 v-model="registerForm.password_confirmation"
                 label="Nhập lại mật khẩu"
+                :rules="[rules.required, rules.passwordMatch]"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
 
-              <VAlert style="margin-top: 6px" color="error" v-if="error" text="Sai tài khoản / mật khẩu"/>
+              <VSnackbar color="error" v-model="error" timeout="2000">
+                Lỗi tạo tài khoản
+              </VSnackbar>
               <!-- remember me checkbox -->
-              <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
-
-
-                <a
-                  class="ms-2 mb-1"
-                  href="/login"
-                >
-                  Có tài khoản, đăng nhập
-                </a>
-              </div>
 
               <!-- login button -->
               <VBtn
-                block
+                block class="mt-5"
                 @click="handleSubmit"
               >
                 Đăng kí ngay
               </VBtn>
+              <div class="d-flex align-center justify-center flex-wrap mt-1 mb-4">
+                <router-link
+                  class="ms-2 mb-1"
+                  to="/login"
+                >
+                  Có tài khoản, đăng nhập
+                </router-link>
+              </div>
+
             </VCol>
-
-            <!-- create account -->
-            <!--            <VCol-->
-            <!--              cols="12"-->
-            <!--              class="text-center text-base"-->
-            <!--            >-->
-            <!--              <span>New on our platform?</span>-->
-            <!--              <RouterLink-->
-            <!--                class="text-primary ms-2"-->
-            <!--                to="/register"-->
-            <!--              >-->
-            <!--                Create an account-->
-            <!--              </RouterLink>-->
-            <!--            </VCol>-->
-
-            <!--            <VCol-->
-            <!--              cols="12"-->
-            <!--              class="d-flex align-center"-->
-            <!--            >-->
-            <!--              <VDivider />-->
-            <!--              <span class="mx-4">or</span>-->
-            <!--              <VDivider />-->
-            <!--            </VCol>-->
-
-            <!-- auth providers -->
-            <!--            <VCol-->
-            <!--              cols="12"-->
-            <!--              class="text-center"-->
-            <!--            >-->
-            <!--              <AuthProvider />-->
-            <!--            </VCol>-->
           </VRow>
         </VForm>
       </VCardText>

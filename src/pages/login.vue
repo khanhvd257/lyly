@@ -28,6 +28,18 @@ export default {
         remember: false,
       },
       error: false,
+      rules: {
+        required: value => {
+          if (!value) {
+            return 'Trường này phải điền'
+          }
+          return true
+        },
+        passwordLength: password => {
+          const regexPassword = /^.{8,}$/
+          return regexPassword.test(password) ? true : 'Mật khẩu phải ít nhất 8 ký tự'
+        },
+      },
     }
   },
   mounted() {
@@ -52,7 +64,16 @@ export default {
               transition: 'slide',
               timeout: 3000,
             })
-          router.push("/")
+          const redirectPath = localStorage.getItem('redirectPath')
+          if (redirectPath) {
+            // Xóa thông tin về trang trước đó từ localStorage (đã sử dụng xong)
+            localStorage.removeItem('redirectPath')
+            // Chuyển hướng người dùng quay lại trang trước đó sau khi đăng nhập thành công
+            router.push(redirectPath)
+          } else {
+            // Nếu không có thông tin trang trước đó, chẳng hạn quay lại trang chủ
+            router.push('/')
+          }
         },
       ).catch(err => {
         this.error = true
@@ -75,7 +96,9 @@ export default {
           <!--            <div v-html="logo"/>-->
           <!--          </div>-->
           <div class="d-flex">
-            <img height="100" width="100" src="../assets/images/logo/logo_tron.png" alt=""/>
+            <router-link to="/">
+              <img height="100" width="100" src="../assets/images/logo/logo_tron.png" alt=""/>
+            </router-link>
           </div>
         </template>
         <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
@@ -100,6 +123,7 @@ export default {
               <VTextField
                 v-model="loginForm.username"
                 label="Tên đăng nhập"
+                :rules="[rules.required]"
                 type="text"
               />
             </VCol>
@@ -108,19 +132,33 @@ export default {
             <VCol cols="12">
               <VTextField
                 v-model="loginForm.password"
-                label="Mật khẩu"
+                label="Mật khẩu" :rules="[rules.required, rules.passwordLength]"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
               <VAlert style="margin-top: 6px" color="error" v-if="error" text="Sai tài khoản / mật khẩu"/>
               <!-- remember me checkbox -->
-              <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
-                <VCheckbox
-                  v-model="loginForm.remember"
-                  label="Ghi nhớ đăng nhập"
-                />
 
+              <!-- login button -->
+              <VBtn
+                class="mt-5"
+                block
+                @click="handleSubmit"
+              >
+                Đăng nhập
+              </VBtn>
+              <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
+                <!--                <VCheckbox-->
+                <!--                  v-model="loginForm.remember"-->
+                <!--                  label="Ghi nhớ đăng nhập"-->
+                <!--                />-->
+                <router-link
+                  class="ms-2 mb-1"
+                  to="/register"
+                >
+                  Đăng kí tài khoản?
+                </router-link>
                 <a
                   class="ms-2 mb-1"
                   href="javascript:void(0)"
@@ -128,14 +166,6 @@ export default {
                   Quên mật khẩu?
                 </a>
               </div>
-
-              <!-- login button -->
-              <VBtn
-                block
-                @click="handleSubmit"
-              >
-                Đăng nhập
-              </VBtn>
             </VCol>
 
             <!-- create account -->

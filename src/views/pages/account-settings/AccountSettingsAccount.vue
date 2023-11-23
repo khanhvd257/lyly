@@ -95,6 +95,7 @@
                 <VTextField
                   v-model="formUser.phone"
                   label="Số điện thoại"
+                  :rules="[rules.regexPhoneNumber]"
                   type="number"
                 />
               </VCol>
@@ -134,6 +135,18 @@ export default {
         address: 'Sầm Sơn',
       },
       user: {},
+      rules: {
+        required: value => {
+          if (!value) {
+            return 'Trường này phải điền'
+          }
+          return true
+        },
+        regexPhoneNumber: phone => {
+          const regexPhoneNumber = /^(84|0[3|5|7|8|9])+([0-9]{8})\b$/
+          return regexPhoneNumber.test(phone) ? true : 'Số điện thoại không hợp lệ'
+        },
+      },
     }
   },
   created() {

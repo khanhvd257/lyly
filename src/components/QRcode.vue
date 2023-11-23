@@ -2,18 +2,9 @@
   <VCard elevation="4" width="180">
     <VCardText style="text-align: center;">
       <qrcode-vue :value="value" :size="120" level="H"/>
-      <span style="text-align: center; margin-bottom: 1rem;">Quét QR để xem trên máy điện thoại</span>
+      <span style="text-align: center; margin-bottom: 1rem; margin-top: 6px;">Quét QR để xem trên máy điện thoại</span>
     </VCardText>
   </VCard>
-  <!--    <qrcode-stream style="width: 300px; height: 300px; border-radius: 8px" v-if="isShow"-->
-  <!--                   :paused="paused" @detect="onDetect" @error="onError" @camera-on="resetValidationState"-->
-  <!--    >-->
-  <!--      <div v-if="validationSuccess" class="validation-success">This is a URL</div>-->
-
-  <!--      <div v-if="validationFailure" class="validation-failure">This is NOT a URL!</div>-->
-
-  <!--      <div v-if="validationPending" class="validation-pending">Long validation in progress...</div>-->
-  <!--    </qrcode-stream>-->
 </template>
 
 <script>

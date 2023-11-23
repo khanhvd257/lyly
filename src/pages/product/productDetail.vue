@@ -73,7 +73,7 @@ import InnerImageZoom from 'vue-inner-image-zoom'
 
 export default {
   name: "product_detail",
-  components: { PreOrder, Review, PicZoom, QRcode, InnerImageZoom },
+  components: { PreOrder, Review, QRcode, InnerImageZoom },
   created() {
     this.getProduct(this.$route.query.id)
     this.getDataReview()

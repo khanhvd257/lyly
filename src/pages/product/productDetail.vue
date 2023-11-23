@@ -5,13 +5,13 @@
         <div class="product-img">
           <div class="img-wrap">
             <div class="zoom-img">
-              <pic-zoom style="border-radius: 8px; overflow: hidden" :url="product.image_url" :scale="3" alt=""/>
+              <inner-image-zoom style="border-radius: 8px; overflow: hidden" :src="product.image_url"/>
             </div>
           </div>
-<!--          <div class="flex mt-1">-->
-<!--            <VIcon icon="mdi-heart"/>-->
-<!--            Thêm vào yêu thích-->
-<!--          </div>-->
+          <!--          <div class="flex mt-1">-->
+          <!--            <VIcon icon="mdi-heart"/>-->
+          <!--            Thêm vào yêu thích-->
+          <!--          </div>-->
         </div>
         <div class="product-content">
           <span class="name">{{ product.name }}</span>
@@ -61,17 +61,19 @@
 
 <script>
 import Review from "@/components/Review.vue"
-import PicZoom from 'vue-piczoom'
 import { getDetailProduct } from "@/api/product"
 import PreOrder from "@/pages/order/preOrder.vue"
 import { addToCart } from "@/api/order"
 import { getReviewProduct } from "@/api/rating"
 import QRcode from "@/components/QRcode.vue"
 import router from "@/router"
+import 'vue-inner-image-zoom/lib/vue-inner-image-zoom.css'
+import InnerImageZoom from 'vue-inner-image-zoom'
+
 
 export default {
   name: "product_detail",
-  components: { PreOrder, Review, PicZoom, QRcode },
+  components: { PreOrder, Review, PicZoom, QRcode, InnerImageZoom },
   created() {
     this.getProduct(this.$route.query.id)
     this.getDataReview()
@@ -80,9 +82,9 @@ export default {
     error() {
       return this.product.quantity <= 0
     },
-    urlPath(){
+    urlPath() {
       return new URL(location.href)
-    }
+    },
   },
   data() {
     return {

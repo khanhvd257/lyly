@@ -128,11 +128,11 @@ export default {
       avatar1,
       formUser: {
         avatar: '',
-        name: 'Văn Đình Khánh',
-        email: 'khanhve@example.com',
-        username: 'khanhvd',
-        phone: '0388018333',
-        address: 'Sầm Sơn',
+        name: '',
+        email: '',
+        username: '',
+        phone: '',
+        address: '',
       },
       user: {},
       rules: {

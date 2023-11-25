@@ -2,7 +2,7 @@
   <div class="product">
     <h3 v-if="title" class="header-text">{{ title }}</h3>
     <h3 v-else class="header-text">Sản phẩm đang được bày bán tại LYLY Store</h3>
-    <VRow style="gap: 10px" justify="space-around" justify-sm="space-between" class="container">
+    <div style="display: flex; flex-wrap: wrap" class="container">
       <div
         v-for="item in productList" :key="item.id"
       >
@@ -33,7 +33,7 @@
           </div>
         </div>
       </div>
-    </VRow>
+    </div>
   </div>
 </template>
 
@@ -70,6 +70,9 @@ export default {
 <style lang="scss" scoped>
 
 @media (max-width: 600px) {
+  .container{
+    gap: 16px!important;
+  }
   .product-content {
     height: 250px !important;
     width: 182px !important;;
@@ -100,6 +103,7 @@ export default {
   justify-content: space-between;
 
   .container {
+    gap: 30px;
     max-width: 1200px;
     width: 100%;
     row-gap: 1rem;

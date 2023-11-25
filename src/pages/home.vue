@@ -5,9 +5,9 @@
                   show-arrows="hover"
                   cycle height="300" interval="4000"
       >
-        <v-carousel-item v-for="item in bannerList" :key="item">
+        <v-carousel-item v-for="(item,i) in bannerList" :key="i">
           <img width="890" height="300" class="baner-img" slot="sources"
-               :src="`./src/assets/banner/${item}.png`"
+               :src="item"
           />
         </v-carousel-item>
       </v-carousel>
@@ -76,6 +76,9 @@ import ProductList from "@/components/productList.vue"
 import ThreeBanner from "@/components/ThreeBanner.vue"
 import HotProduct from "@/components/HotProduct.vue"
 import { getAllCategory, getProducts } from "@/api/product"
+import banner1 from '@/assets/banner/banner1.png'
+import banner2 from '@/assets/banner/banner2.png'
+import banner3 from '@/assets/banner/banner3.png'
 import BestSell from "@/pages/product/bestSell.vue"
 
 export default {
@@ -104,7 +107,7 @@ export default {
       cateArr: [],
       productList: [],
       bannerList: [
-        'banner1', 'banner2', 'banner3',
+        banner1, banner2, banner3,
       ],
       modules: [Autoplay, Pagination, Navigation],
       imgList:

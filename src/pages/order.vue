@@ -67,7 +67,8 @@
                       v-if="order.status == 'Done' && item.isRating ==0"
                 >Đánh giá
                 </VBtn>
-                <VChip size="small" style="margin-left: 8px" v-if="order.status == 'Done' && item.isRating ==1" variant="elevated" color="success"
+                <VChip size="small" style="margin-left: 8px" v-if="order.status == 'Done' && item.isRating ==1"
+                       variant="elevated" color="success"
                 >
                   Đã đánh giá
                 </VChip>
@@ -82,11 +83,11 @@
             Tổng tiền thanh toán:
             <span>{{ formatPrice(order.total_price) }}</span>
           </div>
-          <VBtn style="margin: 6px 2px" @click="handleCancelOrder(order.id)" v-if="order.status == 'Pending'"
+          <VBtn style="margin: 6px 2px" @click="handleAction(order.id, 'Cancel')" v-if="order.status == 'Pending'"
                 variant="outlined"
           >Hủy đơn hàng
           </VBtn>
-          <VBtn color="success" style="margin: 6px 2px" @click="handleDoneOrder(order.id)"
+          <VBtn color="success" style="margin: 6px 2px" @click="handleAction(order.id, 'Done')"
                 v-if="order.status == 'Confirmed'"
                 variant="outlined"
           >Hoàn thành đơn hàng
@@ -100,7 +101,7 @@
       v-model="dialog"
       persistent
     >
-      <template v-slot:default="{ isActive }">
+      <template v-slot:default="{ isActive }" v-if="!isConfirm">
         <v-card>
           <v-toolbar
             color="primary"
@@ -135,7 +136,32 @@
           </v-card-actions>
         </v-card>
       </template>
+      <template v-slot:default="{ isActive }" v-else>
+        <v-card>
+          <v-toolbar
+            color="primary"
+            title="Xác nhận"
+          ></v-toolbar>
+          <v-card-text>
+            {{ action.message }}
+          </v-card-text>
+          <v-card-actions class="justify-end layout-footer-sticky">
+            <v-btn
+              variant="text"
+              @click="handleSureConfirm"
+            >Chắc chắn
+            </v-btn>
+            <v-btn
+              variant="text"
+              @click="isActive.value = false"
+            >Hủy
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+
     </v-dialog>
+
   </div>
 </template>
 
@@ -155,6 +181,12 @@ export default {
       searchOrder: {
         status: '',
       },
+      action: {
+        message: '',
+        type: '',
+        id: '',
+      },
+      isConfirm: false,
       formRating: {
         product_id: '',
         rating: 5,
@@ -194,6 +226,7 @@ export default {
     },
 
     handleRating(val) {
+      this.isConfirm = false
       this.formRating = {
         product_id: val.product.id,
         order_id: val.id,
@@ -208,12 +241,39 @@ export default {
       this.searchOrder.status = status
       this.getDataOrder()
     },
+    handleAction(id, orderStatus) {
+      this.isConfirm = true
+      this.dialog = true
+      this.action.id = id
+      if (orderStatus == 'Cancel') {
+        this.action.type = 'Cancel'
+        this.action.message = 'Bạn có chắc chắn muốn hủy đơn hàng này không?'
+      }
+      if (orderStatus == 'Done') {
+        this.action.type = 'Done'
+        this.action.message = 'Bạn đã nhận được đơn hàng này chưa?'
+      }
+    },
+    handleSureConfirm() {
+      if (this.action.type == 'Done') this.handleDoneOrder(this.action.id)
+      if (this.action.type == 'Cancel') this.handleCancelOrder(this.action.id)
+    },
     handleCancelOrder(id) {
       cancelOrder(id).then(res => {
         this.getDataOrder()
         this.$moshaToast('Hủy thành công',
           {
             type: 'success',
+            transition: 'slide',
+            hideProgressBar: 'true',
+            timeOut: 2000,
+          })
+        this.dialog = false
+
+      }).catch(err => {
+        this.$moshaToast(err.response.data.messages,
+          {
+            type: 'warning',
             transition: 'slide',
             hideProgressBar: 'true',
             timeOut: 2000,
@@ -230,6 +290,7 @@ export default {
             hideProgressBar: 'true',
             timeOut: 2000,
           })
+        this.dialog = false
       }).catch(err => {
         this.$moshaToast(err.response.data.messages,
           {
